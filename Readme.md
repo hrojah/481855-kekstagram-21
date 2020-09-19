@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Плотников](https://up.htmlacademy.ru/javascript/21/user/481855).
-* Наставник: `Неизвестно`.
+* Наставник: [Павел Лукин](https://htmlacademy.ru/profile/id1313529).
 
 ---
 
