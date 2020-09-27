@@ -2,22 +2,22 @@
 
 let urls = [];
 
-const GET_URL_NUMBER = () => {
+const getUrlNumber = () => {
   for (let i = 1; i <= 25; i++) {
     urls.push('photos/' + i + '.jpg');
   }
 };
 
-GET_URL_NUMBER()
+getUrlNumber()
 
-const GET_URL = () => {
+const getUrl = () => {
     const INDEX = Math.floor(Math.random() * urls.length);
     const url = urls[INDEX];
     urls.splice(INDEX, 1);
     return url;
 };
 
-const GET_RANDOM_NUMBER = (min, max) => {
+const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -28,7 +28,9 @@ const COMMENT_TEXT = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const GET_COMMENT_TEXT = COMMENT_TEXT[Math.floor(Math.random() * COMMENT_TEXT.length)];
+const getCommentText = () => {
+    return  COMMENT_TEXT[Math.floor(Math.random() * COMMENT_TEXT.length)];
+}
 
 const USER_NAMES = [
   'Антон',
@@ -39,7 +41,9 @@ const USER_NAMES = [
   'Дмитрий',
 ];
 
-const GET_USER_NAME = USER_NAMES[Math.floor(Math.random() * USER_NAMES.length)];
+const getUserName = () => {
+    return USER_NAMES[Math.floor(Math.random() * USER_NAMES.length)];
+}
 
 const photoDescription = [];
 
@@ -47,12 +51,12 @@ const createPhotoDescriptionArray = (values) => {
   for (let i = 1; i <= values; i++) {
     photoDescription.push(
       {
-        url: GET_URL(),
+        url: getUrl(),
         description: '',
-        likes : GET_RANDOM_NUMBER(15, 200),
+        likes : getRandomNumber(15, 200),
         comments: [
-          {avatar: 'img/avatar-' + GET_RANDOM_NUMBER(1, 6) + '.svg', message: GET_COMMENT_TEXT, name: GET_USER_NAME},
-          {avatar: 'img/avatar-' + GET_RANDOM_NUMBER(1, 6) + '.svg', message: GET_COMMENT_TEXT, name: GET_USER_NAME}
+          {avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg', message: getCommentText, name: getUserName},
+          {avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg', message: getCommentText, name: getUserName}
         ]
       }
     )
@@ -72,14 +76,14 @@ const renderPicture = function(photoDescription) {
 
   pictureElement.querySelector('.picture__img').src = photoDescription.url;
   pictureElement.querySelector('.picture__likes').textContent = photoDescription.likes;
-  pictureElement.querySelector('.picture__comments').textContent = 'photoDescription.comments.length';
+  pictureElement.querySelector('.picture__comments').textContent = photoDescription.comments.length;
 
   return pictureElement;
 }
 
 const pictureFragment = document.createDocumentFragment();
 for (let i = 0; i < photoDescription.length; i++) {
-    pictureFragment.append(renderPicture[photoDescription[i]]);
+    pictureFragment.append(renderPicture(photoDescription[i]));
 }
 
 pictures.append(pictureFragment);
