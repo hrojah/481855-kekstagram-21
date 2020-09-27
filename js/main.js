@@ -11,9 +11,9 @@ const GET_URL_NUMBER = () => {
 GET_URL_NUMBER()
 
 const GET_URL = () => {
-    const index = Math.floor(Math.random() * urls.length);
-    const url = urls[index];
-    urls.splice(index, 1);
+    const INDEX = Math.floor(Math.random() * urls.length);
+    const url = urls[INDEX];
+    urls.splice(INDEX, 1);
     return url;
 };
 
