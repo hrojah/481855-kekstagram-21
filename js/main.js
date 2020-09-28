@@ -21,37 +21,30 @@ const USER_NAMES = [
   'Дмитрий',
 ];
 
-const cardsPicture = document.querySelector('#picture').content.querySelector('a');
-const pictures = document.querySelector('.pictures');
-const pictureFragment = document.createDocumentFragment();
-
-
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 const getCommentText = () => {
-  return  COMMENT_TEXT[Math.floor(Math.random() * COMMENT_TEXT.length)];
-}
+  return  COMMENT_TEXT[getRandomNumber(0, COMMENT_TEXT.length)];
+};
 
 const getUserName = () => {
-  return USER_NAMES[Math.floor(Math.random() * USER_NAMES.length)];
-}
+  return USER_NAMES[getRandomNumber(0, USER_NAMES.length)];
+};
 
 const getComment = () => {
   const comment = [];
   const commentNumber = getRandomNumber(1,5);
   for (let i = 1; i <= commentNumber; i++) {
-    comment.push(
-      {
-        avatar: 'img/avatar-' + getRandomNumber(MIN_AVATAR, MAX_AVATAR) + '.svg',
-        message: getCommentText(),
-        name: getUserName()
-      }
-    )
+    comment.push({
+      avatar: `img/avatar-${getRandomNumber(MIN_AVATAR, MAX_AVATAR)}.svg`,
+      message: getCommentText(),
+      name: getUserName()
+      });
   }
   return comment;
-}
+};
 
 const createPhotoDescriptionArray = (values) => {
   const photoDescription = [];
@@ -62,8 +55,7 @@ const createPhotoDescriptionArray = (values) => {
         description: '',
         likes : getRandomNumber(MIN_LIKES, MAX_LIKES),
         comments: getComment()
-      }
-    )
+      });
   }
   return photoDescription;
 };
@@ -76,7 +68,11 @@ const renderPicture = (photoDescription) => {
   pictureElement.querySelector('.picture__comments').textContent = photoDescription.comments.length;
 
   return pictureElement;
-}
+};
+
+const cardsPicture = document.querySelector('#picture').content.querySelector('a');
+const pictures = document.querySelector('.pictures');
+const pictureFragment = document.createDocumentFragment();
 
 const photoDescription = createPhotoDescriptionArray(25);
 
