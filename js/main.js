@@ -1,25 +1,9 @@
 'use strict';
 
-let urls = [];
-
-const getUrlNumber = () => {
-  for (let i = 1; i <= 25; i++) {
-    urls.push('photos/' + i + '.jpg');
-  }
-};
-
-getUrlNumber()
-
-const getUrl = () => {
-    const INDEX = Math.floor(Math.random() * urls.length);
-    const url = urls[INDEX];
-    urls.splice(INDEX, 1);
-    return url;
-};
-
-const getRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const MIN_AVATAR = 1;
+const MAX_AVATAR = 6;
 
 const COMMENT_TEXT = [
   'Всё отлично!',
@@ -27,10 +11,6 @@ const COMMENT_TEXT = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-
-const getCommentText = () => {
-    return  COMMENT_TEXT[Math.floor(Math.random() * COMMENT_TEXT.length)];
-}
 
 const USER_NAMES = [
   'Антон',
@@ -41,37 +21,54 @@ const USER_NAMES = [
   'Дмитрий',
 ];
 
-const getUserName = () => {
-    return USER_NAMES[Math.floor(Math.random() * USER_NAMES.length)];
+const cardsPicture = document.querySelector('#picture').content.querySelector('a');
+const pictures = document.querySelector('.pictures');
+const pictureFragment = document.createDocumentFragment();
+
+
+const getRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getCommentText = () => {
+  return  COMMENT_TEXT[Math.floor(Math.random() * COMMENT_TEXT.length)];
 }
 
-const photoDescription = [];
+const getUserName = () => {
+  return USER_NAMES[Math.floor(Math.random() * USER_NAMES.length)];
+}
+
+const getComment = () => {
+  const comment = [];
+  const commentNumber = getRandomNumber(1,5);
+  for (let i = 1; i <= commentNumber; i++) {
+    comment.push(
+      {
+        avatar: 'img/avatar-' + getRandomNumber(MIN_AVATAR, MAX_AVATAR) + '.svg',
+        message: getCommentText(),
+        name: getUserName()
+      }
+    )
+  }
+  return comment;
+}
 
 const createPhotoDescriptionArray = (values) => {
+  const photoDescription = [];
   for (let i = 1; i <= values; i++) {
     photoDescription.push(
       {
-        url: getUrl(),
+        url: `photos/${i}.jpg`,
         description: '',
-        likes : getRandomNumber(15, 200),
-        comments: [
-          {avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg', message: getCommentText, name: getUserName},
-          {avatar: 'img/avatar-' + getRandomNumber(1, 6) + '.svg', message: getCommentText, name: getUserName}
-        ]
+        likes : getRandomNumber(MIN_LIKES, MAX_LIKES),
+        comments: getComment()
       }
     )
   }
   return photoDescription;
 };
 
-
-createPhotoDescriptionArray(25);
-
-const cardsPicture = document.querySelector('#picture').content.querySelector('a');
-const pictures = document.querySelector('.pictures');
-
-
-const renderPicture = function(photoDescription) {
+const renderPicture = (photoDescription) => {
   const pictureElement = cardsPicture.cloneNode(true);
 
   pictureElement.querySelector('.picture__img').src = photoDescription.url;
@@ -81,9 +78,10 @@ const renderPicture = function(photoDescription) {
   return pictureElement;
 }
 
-const pictureFragment = document.createDocumentFragment();
+const photoDescription = createPhotoDescriptionArray(25);
+
 for (let i = 0; i < photoDescription.length; i++) {
-    pictureFragment.append(renderPicture(photoDescription[i]));
+  pictureFragment.append(renderPicture(photoDescription[i]));
 }
 
 pictures.append(pictureFragment);
