@@ -80,3 +80,22 @@ for (let i = 0; i < photoDescription.length; i++) {
 }
 
 pictures.append(pictureFragment);
+
+const bigPicture = document.querySelector(`.big-picture`);
+const commentCount = bigPicture.querySelector(`.social__comment-count`);
+const commentLoader = bigPicture.querySelector(`.comments-loader`);
+const socialPicture = bigPicture.querySelector(`.social__picture`);
+
+bigPicture.classList.remove(`hidden`);
+
+bigPicture.querySelector(`div > img`).src.textContent = photoDescription[0].url;
+bigPicture.querySelector(`.likes-count`).textContent = photoDescription[0].likes;
+bigPicture.querySelector(`.social__caption`).textContent = photoDescription[0].description;
+bigPicture.querySelector(`.comments-count`).textContent = photoDescription[0].comments.length;
+socialPicture.src = photoDescription[0].comments.avatar;
+socialPicture.alt.textContent = photoDescription[0].comments.name;
+bigPicture.querySelector(`.social__text`).textContent = photoDescription[0].comments.message;
+
+
+commentCount.classList.add(`hidden`);
+commentLoader.classList.add(`hidden`);
