@@ -26,11 +26,11 @@ const getRandomNumber = (min, max) => {
 };
 
 const getCommentText = () => {
-  return COMMENT_TEXT[getRandomNumber(0, COMMENT_TEXT.length)];
+  return COMMENT_TEXT[getRandomNumber(0, COMMENT_TEXT.length - 1)];
 };
 
 const getUserName = () => {
-  return USER_NAMES[getRandomNumber(0, USER_NAMES.length)];
+  return USER_NAMES[getRandomNumber(0, USER_NAMES.length - 1)];
 };
 
 const getComments = (commentNumber) => {
