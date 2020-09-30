@@ -69,19 +69,32 @@ const renderPicture = (photoDescription) => {
   return pictureElement;
 };
 
-const renderComment = () => {
+const renderComment = (comment) => {
   const element = document.createElement(`li`);
   const commentImg = document.createElement(`img`);
   const commentText = document.createElement(`p`);
-  element.classList.add(`social.comment`);
+  element.classList.add(`social__comment`);
   commentImg.classList.add(`social__picture`);
-  commentText.classList.add(`social.text`);
-  element.append(`commentImg`);
-  element.append(`commentText`);
-  commentImg.src = photoDescription.comments.avatar;
-  commentImg.alt = photoDescription.comments.name;
-  commentText.textContent = photoDescription.comments.message;
+  commentText.classList.add(`social__text`);
+  element.appendChild(commentImg);
+  element.appendChild(commentText);
+  commentImg.src = comment.avatar;
+  commentImg.alt = comment.name;
+  commentText.textContent = comment.message;
   return element;
+};
+
+const renderBigPicture = (photo) => {
+  bigPicture.querySelector(`.big-picture__img img`).src = photo.url;
+  bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+  bigPicture.querySelector(`.social__caption`).textContent = photo.description;
+  bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
+  const comments = document.createDocumentFragment();
+  for (let i = 0; i < photo.comments.length; i++) {
+    comments.appendChild(renderComment(photo.comments[i]));
+  }
+  socialComments.innerHTML = ``;
+  socialComments.append(comments);
 };
 
 const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
@@ -99,17 +112,7 @@ pictures.append(pictureFragment);
 const bigPicture = document.querySelector(`.big-picture`);
 const commentCount = bigPicture.querySelector(`.social__comment-count`);
 const commentLoader = bigPicture.querySelector(`.comments-loader`);
-/*const socialComments = document.querySelector(`.social__comments`);*/
-
-const renderBigPicture = () => {
-  bigPicture.querySelector(`.big-picture__img img`).src = photoDescription.url;
-  bigPicture.querySelector(`.likes-count`).textContent = photoDescription.likes;
-  bigPicture.querySelector(`.social__caption`).textContent = photoDescription.description;
-  bigPicture.querySelector(`.comments-count`).textContent = photoDescription.comments.length;
-  for (let i = 0; i <= photoDescription.comments.length; i++) {
-    renderComment(photoDescription.comments[i]);
-  }
-};
+const socialComments = document.querySelector(`.social__comments`);
 
 renderBigPicture(photoDescription[0]);
 
