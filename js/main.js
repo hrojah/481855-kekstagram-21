@@ -4,6 +4,8 @@ const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
+const MAX_HASHTAGS = 5;
+/*const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/gi;*/
 
 const COMMENT_TEXT = [
   `Всё отлично!`,
@@ -151,21 +153,82 @@ const increaseScale = () => {
 
 const effectChangeHandler = (evt) => {
   if (evt.target.matches(`input[type='radio']`)) {
+    effectLevel.value = 100;
     if (evt.target.value === `chrome`) {
+      imgPreview.removeAttribute(`style`);
       imgPreview.className = EFFECTS[evt.target.value];
     } else if (evt.target.value === `sepia`) {
+      imgPreview.removeAttribute(`style`);
       imgPreview.className = EFFECTS[evt.target.value];
     } else if (evt.target.value === `marvin`) {
+      imgPreview.removeAttribute(`style`);
       imgPreview.className = EFFECTS[evt.target.value];
     } else if (evt.target.value === `phobos`) {
+      imgPreview.removeAttribute(`style`);
       imgPreview.className = EFFECTS[evt.target.value];
     } else if (evt.target.value === `heat`) {
+      imgPreview.removeAttribute(`style`);
       imgPreview.className = EFFECTS[evt.target.value];
     } else if (evt.target.value === `none`) {
       imgPreview.className = ``;
+      imgPreview.style.remove(`filter`);
     }
-  } /*effectLevel.value = 100;*/
+  }
 };
+
+const effectLevelHandler = () => {
+  const value = parseInt(effectLevel.value, 10);
+  const effectLevelValue = value / 100;
+  if (imgPreview.className === `effects__preview--chrome`) {
+    imgPreview.style.filter = `grayscale(${effectLevelValue})`;
+  } else if (imgPreview.className === `effects__preview--sepia`) {
+    imgPreview.style.filter = `sepia(${effectLevelValue})`;
+  } else if (imgPreview.className === `effects__preview--marvin`) {
+    imgPreview.style.filter = `invert(${effectLevelValue * 100}%)`;
+  } else if (imgPreview.className === `effects__preview--phobos`) {
+    imgPreview.style.filter = `blur(${effectLevelValue * 3}px)`;
+  } else if (imgPreview.className === `effects__preview--heat`) {
+    imgPreview.style.filter = `brightness(${1 + effectLevelValue * 2})`;
+  } else if (imgPreview.className === ``) {
+    imgPreview.style.remove(`filter`);
+  }
+};
+
+
+const hashtagsNumber = (hashtaglist) => {
+  return hashtaglist.length > MAX_HASHTAGS;
+};
+
+const hashtagsRepeat = (hashtaglist) => {
+  for (let i = 0; i < hashtaglist.length; i++) {
+    for (let j = i + 1; j > hashtaglist.length; j++) {
+      if (hashtaglist[i] === hashtaglist[j]) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const hashtagValidity = () => {
+  const hashtags = hashtagsText.value.trim();
+  const hashtag = hashtags.split(` `);
+  if (hashtagsNumber(hashtag) === true) {
+    hashtagsText.setCustomValidity(`не больше 5 хэштегов`);
+  } else if (hashtagsRepeat(hashtag) === true) {
+    hashtagsText.setCustomValidity(`хэштеги не должны повторяться`);
+  } else {
+    hashtagsText.setCustomValidity(``);
+  }
+};
+/*  for (let i = 0; i <= hashtag.length; i++) {
+    if (REG.test(hashtag[i]) === false) {
+      hashtagsText.setCustomValidity(`недопустимые символы`);
+    } else {
+      hashtagsText.setCustomValidity(``);
+    }
+  }
+  hashtagsText.reportValidity();*/
 
 const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
 const pictures = document.querySelector(`.pictures`);
@@ -228,23 +291,10 @@ scaleBigger.addEventListener(`click`, () => {
 
 form.addEventListener(`change`, effectChangeHandler);
 
-
-const effectLevelHandler = () => {
-  const value = parseInt(effectLevel.value, 10);
-  const effectLevelValue = value / 100;
-  if (imgPreview.className === `effects__preview—chrome`) {
-    imgPreview.style.filter = `grayscale(${effectLevelValue})`;
-  } else if (imgPreview.className === `effects__preview—sepia`) {
-    imgPreview.style.filter = `sepia(${effectLevelValue})`;
-  } else if (imgPreview.className === `effects__preview—marvin`) {
-    imgPreview.style.filter = `invert(${effectLevelValue * 100}%)`;
-  } else if (imgPreview.className === `effects__preview—phobos`) {
-    imgPreview.style.filter = `blur(${effectLevelValue * 3}px)`;
-  } else if (imgPreview.className === `effects__preview—heat`) {
-    imgPreview.style.filter = `brightness(${1 + effectLevelValue * 2})`;
-  } else if (imgPreview.className === ``) {
-    imgPreview.style.remove(`filter`);
-  }
-};
-
 pin.addEventListener(`mouseup`, effectLevelHandler);
+
+const hashtagsText = document.querySelector(`.text__hashtags`);
+
+hashtagsText.addEventListener(`input`, () => {
+  hashtagValidity();
+});
