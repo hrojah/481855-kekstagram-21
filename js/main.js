@@ -216,7 +216,7 @@ const hashtagsRepeat = (hashtaglist) => {
 
 const regularhashtag = (hashtaglist) => {
   for (let i = 0; i < hashtaglist.length; i++) {
-    if (REG.test(hashtaglist[i]) === true) {
+    if (!REG.test(hashtaglist[i])) {
       return true;
     }
   }
@@ -224,7 +224,7 @@ const regularhashtag = (hashtaglist) => {
 };
 
 const hashtagValidity = () => {
-  const hashtags = hashtagsText.value.trim().split(` `);
+  const hashtags = hashtagsText.value.toLowerCase().trim().split(` `);
   if (hashtagsNumber(hashtags)) {
     hashtagsText.setCustomValidity(`не больше 5 хэштегов`);
   } else if (hashtagsRepeat(hashtags)) {
