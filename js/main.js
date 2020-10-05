@@ -108,9 +108,13 @@ const renderBigPicture = (photo) => {
 
 const onOverlayEscPress = (evt) => {
   if (evt.key === `Escape`) {
-    evt.preventDefault();
-    uploadOverlay.classList.add(`hidden`);
-    body.classList.remove(`modal-open`);
+    if (evt.target === hashtagsText) {
+      evt.preventDefault();
+    } else {
+      evt.preventDefault();
+      uploadOverlay.classList.add(`hidden`);
+      body.classList.remove(`modal-open`);
+    }
   }
 };
 
@@ -211,22 +215,18 @@ const hashtagsRepeat = (hashtaglist) => {
 };
 
 const regularhashtag = (hashtaglist) => {
-  for (let i = 0; i <= hashtaglist.length; i++) {
-    if (REG.test(hashtaglist[i]) === false) {
-      return true;
-    }
+  for (let i = 0; i < hashtaglist.length; i++) {
+    REG.test(hashtaglist[i]);
   }
-  return false;
 };
 
 const hashtagValidity = () => {
-  const hashtags = hashtagsText.value.trim();
-  const hashtag = hashtags.split(` `);
-  if (hashtagsNumber(hashtag) === true) {
+  const hashtags = hashtagsText.value.trim().split(` `);
+  if (hashtagsNumber(hashtags) === true) {
     hashtagsText.setCustomValidity(`не больше 5 хэштегов`);
-  } else if (hashtagsRepeat(hashtag) === true) {
+  } else if (hashtagsRepeat(hashtags) === true) {
     hashtagsText.setCustomValidity(`хэштеги не должны повторяться`);
-  } else if (regularhashtag(hashtag) === true) {
+  } else if (regularhashtag(hashtags) === false) {
     hashtagsText.setCustomValidity(`недопустимые символы`);
   } else {
     hashtagsText.setCustomValidity(``);
