@@ -5,7 +5,7 @@ const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
 const MAX_HASHTAGS = 5;
-const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/gi;
+const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/i;
 
 const COMMENT_TEXT = [
   `Всё отлично!`,
@@ -216,17 +216,20 @@ const hashtagsRepeat = (hashtaglist) => {
 
 const regularhashtag = (hashtaglist) => {
   for (let i = 0; i < hashtaglist.length; i++) {
-    REG.test(hashtaglist[i]);
+    if (REG.test(hashtaglist[i]) === true) {
+      return true;
+    }
   }
+  return false;
 };
 
 const hashtagValidity = () => {
   const hashtags = hashtagsText.value.trim().split(` `);
-  if (hashtagsNumber(hashtags) === true) {
+  if (hashtagsNumber(hashtags)) {
     hashtagsText.setCustomValidity(`не больше 5 хэштегов`);
-  } else if (hashtagsRepeat(hashtags) === true) {
+  } else if (hashtagsRepeat(hashtags)) {
     hashtagsText.setCustomValidity(`хэштеги не должны повторяться`);
-  } else if (regularhashtag(hashtags) === false) {
+  } else if (regularhashtag(hashtags)) {
     hashtagsText.setCustomValidity(`недопустимые символы`);
   } else {
     hashtagsText.setCustomValidity(``);
