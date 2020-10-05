@@ -5,6 +5,7 @@ const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
 const MAX_HASHTAGS = 5;
+const MAX_SYMBOL = 20;
 const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/i;
 
 const COMMENT_TEXT = [
@@ -133,6 +134,7 @@ const closeOverlay = () => {
   upload.value = ``;
   imgPreview.style.transform = `scale(1)`;
   imgPreview.className = ``;
+  hashtagsText.value = ``;
 };
 
 const declineScale = () => {
@@ -223,6 +225,15 @@ const regularhashtag = (hashtaglist) => {
   return false;
 };
 
+const hashtagSymbols = (hashtaglist) => {
+  for (let i = 0; i < hashtaglist.length; i++) {
+    if (hashtaglist[i].length > MAX_SYMBOL) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const hashtagValidity = () => {
   const hashtags = hashtagsText.value.toLowerCase().trim().split(` `);
   if (hashtagsNumber(hashtags)) {
@@ -231,6 +242,8 @@ const hashtagValidity = () => {
     hashtagsText.setCustomValidity(`хэштеги не должны повторяться`);
   } else if (regularhashtag(hashtags)) {
     hashtagsText.setCustomValidity(`недопустимые символы`);
+  } else if (hashtagSymbols(hashtags)) {
+    hashtagsText.setCustomValidity(`не больше 20 символов`);
   } else {
     hashtagsText.setCustomValidity(``);
   }
