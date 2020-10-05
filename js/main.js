@@ -5,7 +5,7 @@ const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
 const MAX_HASHTAGS = 5;
-/*const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/gi;*/
+const REG = /#(?=.*[^0-9])[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/gi;
 
 const COMMENT_TEXT = [
   `Всё отлично!`,
@@ -201,10 +201,19 @@ const hashtagsNumber = (hashtaglist) => {
 
 const hashtagsRepeat = (hashtaglist) => {
   for (let i = 0; i < hashtaglist.length; i++) {
-    for (let j = i + 1; j > hashtaglist.length; j++) {
+    for (let j = i + 1; j < hashtaglist.length; j++) {
       if (hashtaglist[i] === hashtaglist[j]) {
         return true;
       }
+    }
+  }
+  return false;
+};
+
+const regularhashtag = (hashtaglist) => {
+  for (let i = 0; i <= hashtaglist.length; i++) {
+    if (REG.test(hashtaglist[i]) === false) {
+      return true;
     }
   }
   return false;
@@ -217,18 +226,12 @@ const hashtagValidity = () => {
     hashtagsText.setCustomValidity(`не больше 5 хэштегов`);
   } else if (hashtagsRepeat(hashtag) === true) {
     hashtagsText.setCustomValidity(`хэштеги не должны повторяться`);
+  } else if (regularhashtag(hashtag) === true) {
+    hashtagsText.setCustomValidity(`недопустимые символы`);
   } else {
     hashtagsText.setCustomValidity(``);
   }
 };
-/*  for (let i = 0; i <= hashtag.length; i++) {
-    if (REG.test(hashtag[i]) === false) {
-      hashtagsText.setCustomValidity(`недопустимые символы`);
-    } else {
-      hashtagsText.setCustomValidity(``);
-    }
-  }
-  hashtagsText.reportValidity();*/
 
 const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
 const pictures = document.querySelector(`.pictures`);
