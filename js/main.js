@@ -4,6 +4,7 @@ const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MIN_AVATAR = 1;
 const MAX_AVATAR = 6;
+
 const MAX_HASHTAGS = 5;
 const MAX_SYMBOL = 20;
 const REG = /#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}/i;
@@ -302,8 +303,6 @@ renderBigPicture(photoDescription[0]);
 commentCount.classList.add(`hidden`);
 commentLoader.classList.add(`hidden`);
 
-/*bigPicture.classList.remove(`hidden`);*/
-
 const body = document.querySelector(`body`);
 const upload = document.querySelector(`#upload-file`);
 const uploadOverlay = document.querySelector(`.img-upload__overlay`);
@@ -349,4 +348,3 @@ const hashtagsText = document.querySelector(`.text__hashtags`);
 hashtagsText.addEventListener(`input`, hashtagValidity);
 
 form.addEventListener(`submit`, formSubmit);
-
