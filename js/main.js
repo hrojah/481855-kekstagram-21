@@ -101,6 +101,7 @@ const createPhotoDescriptionArray = (values) => {
   const photoDescription = [];
   for (let i = 1; i <= values; i++) {
     photoDescription.push({
+      id: i,
       url: `photos/${i}.jpg`,
       description: ``,
       likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
@@ -113,7 +114,7 @@ const createPhotoDescriptionArray = (values) => {
 
 const renderPicture = (photoDescription) => {
   const pictureElement = cardsPicture.cloneNode(true);
-
+  pictureElement.href = `#` + photoDescription.id;
   pictureElement.querySelector(`.picture__img`).src = photoDescription.url;
   pictureElement.querySelector(`.picture__likes`).textContent = photoDescription.likes;
   pictureElement.querySelector(`.picture__comments`).textContent = photoDescription.comments.length;
@@ -150,12 +151,11 @@ const renderBigPicture = (photo) => {
 
 const onOverlayEscPress = (evt) => {
   if (evt.key === `Escape`) {
-    if (evt.target === hashtagsText) {
+    if (evt.target === hashtagsText || evt.target === commentsText) {
       evt.preventDefault();
     } else {
       evt.preventDefault();
-      uploadOverlay.classList.add(`hidden`);
-      body.classList.remove(`modal-open`);
+      closeOverlay();
     }
   }
 };
@@ -178,6 +178,19 @@ const closeOverlay = () => {
   imgPreview.style.filter = ``;
   imgPreview.className = ``;
   hashtagsText.value = ``;
+};
+
+const onBigPictureEscPress = (evt) => {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeModalOpen();
+  }
+};
+
+const closeModalOpen = () => {
+  bigPicture.classList.add(`hidden`);
+  socialCommentText.value = ``;
+  document.removeEventListener(`keydown`, onBigPictureEscPress);
 };
 
 const declineScale = () => {
@@ -281,6 +294,16 @@ const formSubmit = (evt) => {
   }
 };
 
+const modalOpenHandler = (evt) => {
+  for (let i = 0; i < photoDescription.length; i++) {
+    if (parseInt(evt.target.closest(`.picture`).href.slice(1), 10) === photoDescription[i].id) {
+      renderBigPicture(photoDescription[i]);
+      bigPicture.classList.remove(`hidden`);
+      document.addEventListener(`keydown`, onBigPictureEscPress);
+    }
+  }
+};
+
 const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
 const pictures = document.querySelector(`.pictures`);
 const pictureFragment = document.createDocumentFragment();
@@ -291,27 +314,21 @@ for (let i = 0; i < photoDescription.length; i++) {
   pictureFragment.append(renderPicture(photoDescription[i]));
 }
 
-const modalOpenHandler = () => {
-  /*renderBigPicture();
-  bigPicture.classList.remove(`hidden`);*/
-  console.log(`qwe`);
-};
-
-document.querySelectorAll(`.picture`).forEach((element) => {
-  element.addEventListener(`click`, modalOpenHandler);
-});
-
 pictures.append(pictureFragment);
 
 const bigPicture = document.querySelector(`.big-picture`);
 const commentCount = bigPicture.querySelector(`.social__comment-count`);
 const commentLoader = bigPicture.querySelector(`.comments-loader`);
-const socialComments = document.querySelector(`.social__comments`);
+const socialComments = bigPicture.querySelector(`.social__comments`);
+const socialCommentText = bigPicture.querySelector(`.social__footer-text`);
+const closeBigPicture = bigPicture.querySelector(`.big-picture__cancel`);
 
-/*renderBigPicture(photoDescription[0]);*/
+renderBigPicture(photoDescription[0]);
 
 commentCount.classList.add(`hidden`);
 commentLoader.classList.add(`hidden`);
+
+bigPicture.classList.remove(`hidden`);
 
 const body = document.querySelector(`body`);
 const upload = document.querySelector(`#upload-file`);
@@ -353,10 +370,26 @@ form.addEventListener(`change`, effectChangeHandler);
 
 pin.addEventListener(`mouseup`, effectLevelHandler);
 
-const hashtagsText = document.querySelector(`.text__hashtags`);
+const hashtagsText = form.querySelector(`.text__hashtags`);
+const commentsText = form.querySelector(`.text__description`);
 
 hashtagsText.addEventListener(`input`, hashtagValidity);
 
 form.addEventListener(`submit`, formSubmit);
 
-/*pictures.addEventListener(`click`, imgPreviews);*/
+document.querySelectorAll(`.picture`).forEach((element) => {
+  element.addEventListener(`click`, modalOpenHandler);
+  element.addEventListener(`keydown`, (evt) => {
+    if (evt.key === `Enter`) {
+      modalOpenHandler();
+    }
+  });
+});
+
+closeBigPicture.addEventListener(`click`, closeModalOpen);
+
+closeBigPicture.addEventListener(`keydown`, (evt) => {
+  if (evt.key === `Enter`) {
+    closeModalOpen();
+  }
+});
