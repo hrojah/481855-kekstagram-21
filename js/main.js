@@ -291,6 +291,16 @@ for (let i = 0; i < photoDescription.length; i++) {
   pictureFragment.append(renderPicture(photoDescription[i]));
 }
 
+const modalOpenHandler = () => {
+  /*renderBigPicture();
+  bigPicture.classList.remove(`hidden`);*/
+  console.log(`qwe`);
+};
+
+document.querySelectorAll(`.picture`).forEach((element) => {
+  element.addEventListener(`click`, modalOpenHandler);
+});
+
 pictures.append(pictureFragment);
 
 const bigPicture = document.querySelector(`.big-picture`);
@@ -298,7 +308,7 @@ const commentCount = bigPicture.querySelector(`.social__comment-count`);
 const commentLoader = bigPicture.querySelector(`.comments-loader`);
 const socialComments = document.querySelector(`.social__comments`);
 
-renderBigPicture(photoDescription[0]);
+/*renderBigPicture(photoDescription[0]);*/
 
 commentCount.classList.add(`hidden`);
 commentLoader.classList.add(`hidden`);
@@ -348,3 +358,5 @@ const hashtagsText = document.querySelector(`.text__hashtags`);
 hashtagsText.addEventListener(`input`, hashtagValidity);
 
 form.addEventListener(`submit`, formSubmit);
+
+/*pictures.addEventListener(`click`, imgPreviews);*/
