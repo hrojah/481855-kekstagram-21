@@ -296,7 +296,7 @@ const formSubmit = (evt) => {
 
 const modalOpenHandler = (evt) => {
   for (let i = 0; i < photoDescription.length; i++) {
-    if (parseInt(evt.target.closest(`.picture`).href.slice(1), 10) === photoDescription[i].id) {
+    if (parseInt(evt.target.closest(`.picture`).hash.slice(1), 10) === photoDescription[i].id) {
       renderBigPicture(photoDescription[i]);
       bigPicture.classList.remove(`hidden`);
       document.addEventListener(`keydown`, onBigPictureEscPress);
