@@ -267,8 +267,16 @@ const hashtagSymbols = (hashtag) => {
   return hashtag.length > MAX_SYMBOL;
 };
 
+/*const showValidationMessage = (msg) => {
+  hashtagsText.setCustomValidity(msg);
+};*/
+
 const hashtagValidity = () => {
-  const hashtags = hashtagsText.value.toLowerCase().trim().split(` `);
+  const hashes = hashtagsText.value.toLowerCase().trim();
+  if (!hashes) {
+    return ``;
+  }
+  const hashtags = hashes.split(` `);
   if (hashtagsNumber(hashtags)) {
     return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.maxTags);
   }
@@ -284,7 +292,7 @@ const hashtagValidity = () => {
       return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.numberTags);
     }
   }
-  return hashtagsText.setCustomValidity(``);
+  return ``;
 };
 
 const formSubmit = (evt) => {
@@ -293,6 +301,15 @@ const formSubmit = (evt) => {
     form.submit();
   }
 };
+
+/*const formSubmit = (evt) => {
+  evt.preventDefault();
+  const validationMessage = hashtagValidity();
+  showValidationMessage(validationMessage);
+  if (!validationMessage) {
+    form.submit();
+  }
+};*/
 
 const modalOpenHandler = (evt) => {
   for (let i = 0; i < photoDescription.length; i++) {
