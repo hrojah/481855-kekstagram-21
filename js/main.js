@@ -323,12 +323,10 @@ const socialComments = bigPicture.querySelector(`.social__comments`);
 const socialCommentText = bigPicture.querySelector(`.social__footer-text`);
 const closeBigPicture = bigPicture.querySelector(`.big-picture__cancel`);
 
-renderBigPicture(photoDescription[0]);
+/*renderBigPicture(photoDescription[0]);*/
 
 commentCount.classList.add(`hidden`);
 commentLoader.classList.add(`hidden`);
-
-bigPicture.classList.remove(`hidden`);
 
 const body = document.querySelector(`body`);
 const upload = document.querySelector(`#upload-file`);
