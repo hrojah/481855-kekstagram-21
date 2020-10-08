@@ -71,6 +71,12 @@ const VALIDATION_MESSAGES = {
   repeatTags: `хэштеги не должны повторяться`,
   regularTags: `недопустимые символы`,
   numberTags: `длина хэштега не более 20 символов`,
+  success: ``,
+};
+
+const KEYDOWN = {
+  enter: `Enter`,
+  esc: `Escape`,
 };
 
 const getRandomNumber = (min, max) => {
@@ -150,7 +156,7 @@ const renderBigPicture = (photo) => {
 };
 
 const onOverlayEscPress = (evt) => {
-  if (evt.key === `Escape`) {
+  if (evt.key === KEYDOWN.esc) {
     if (evt.target === hashtagsText || evt.target === commentsText) {
       evt.preventDefault();
     } else {
@@ -184,6 +190,12 @@ const onBigPictureEscPress = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     closeModalOpen();
+  }
+};
+
+const onPressEnter = (evt, callback) => {
+  if (evt.key === `Enter`) {
+    callback(evt);
   }
 };
 
@@ -267,9 +279,10 @@ const hashtagSymbols = (hashtag) => {
   return hashtag.length > MAX_SYMBOL;
 };
 
-/*const showValidationMessage = (msg) => {
+const showValidationMessage = (msg) => {
   hashtagsText.setCustomValidity(msg);
-};*/
+  hashtagsText.reportValidity();
+};
 
 const hashtagValidity = () => {
   const hashes = hashtagsText.value.toLowerCase().trim();
@@ -278,38 +291,31 @@ const hashtagValidity = () => {
   }
   const hashtags = hashes.split(` `);
   if (hashtagsNumber(hashtags)) {
-    return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.maxTags);
+    return VALIDATION_MESSAGES.maxTags;
   }
   for (let i = 0; i < hashtags.length; i++) {
     const hashtag = hashtags[i];
     if (hashtagsRepeat(hashtag, hashtags.slice(i + 1))) {
-      return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.repeatTags);
+      return VALIDATION_MESSAGES.repeatTags;
     }
-    if (regularHashtag(hashtags)) {
-      return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.regularTags);
+    if (regularHashtag(hashtag)) {
+      return VALIDATION_MESSAGES.regularTags;
     }
-    if (hashtagSymbols(hashtags)) {
-      return hashtagsText.setCustomValidity(VALIDATION_MESSAGES.numberTags);
+    if (hashtagSymbols(hashtag)) {
+      return VALIDATION_MESSAGES.numberTags;
     }
   }
-  return ``;
+  return VALIDATION_MESSAGES.success;
 };
 
 const formSubmit = (evt) => {
   evt.preventDefault();
-  if (hashtagValidity()) {
+  const validationMessage = hashtagValidity();
+  showValidationMessage(validationMessage);
+  if (validationMessage === VALIDATION_MESSAGES.success) {
     form.submit();
   }
 };
-
-/*const formSubmit = (evt) => {
-  evt.preventDefault();
-  const validationMessage = hashtagValidity();
-  showValidationMessage(validationMessage);
-  if (!validationMessage) {
-    form.submit();
-  }
-};*/
 
 const modalOpenHandler = (evt) => {
   for (let i = 0; i < photoDescription.length; i++) {
@@ -340,8 +346,6 @@ const socialComments = bigPicture.querySelector(`.social__comments`);
 const socialCommentText = bigPicture.querySelector(`.social__footer-text`);
 const closeBigPicture = bigPicture.querySelector(`.big-picture__cancel`);
 
-/*renderBigPicture(photoDescription[0]);*/
-
 commentCount.classList.add(`hidden`);
 commentLoader.classList.add(`hidden`);
 
@@ -359,7 +363,7 @@ uploadCancel.addEventListener(`click`, () => {
 });
 
 uploadCancel.addEventListener(`keydown`, (evt) => {
-  if (evt.key === `Enter`) {
+  if (evt.key === KEYDOWN.enter) {
     closeOverlay();
   }
 });
@@ -373,38 +377,32 @@ const filterScale = form.querySelector(`.img-upload__effect-level`);
 const effectLevel = filterScale.querySelector(`.effect-level__value`);
 const pin = filterScale.querySelector(`.effect-level__pin`);
 
-scaleSmaller.addEventListener(`click`, () => {
-  declineScale();
-});
+scaleSmaller.addEventListener(`click`, declineScale);
 
-scaleBigger.addEventListener(`click`, () => {
-  increaseScale();
-});
-
-form.addEventListener(`change`, effectChangeHandler);
+scaleBigger.addEventListener(`click`, increaseScale);
 
 pin.addEventListener(`mouseup`, effectLevelHandler);
 
 const hashtagsText = form.querySelector(`.text__hashtags`);
 const commentsText = form.querySelector(`.text__description`);
 
-hashtagsText.addEventListener(`input`, hashtagValidity);
+hashtagsText.addEventListener(`input`, () => {
+  showValidationMessage(VALIDATION_MESSAGES.success);
+});
 
+form.addEventListener(`change`, effectChangeHandler);
 form.addEventListener(`submit`, formSubmit);
+
 
 document.querySelectorAll(`.picture`).forEach((element) => {
   element.addEventListener(`click`, modalOpenHandler);
   element.addEventListener(`keydown`, (evt) => {
-    if (evt.key === `Enter`) {
-      modalOpenHandler();
-    }
+    onPressEnter(evt, modalOpenHandler());
   });
 });
 
 closeBigPicture.addEventListener(`click`, closeModalOpen);
 
 closeBigPicture.addEventListener(`keydown`, (evt) => {
-  if (evt.key === `Enter`) {
-    closeModalOpen();
-  }
+  onPressEnter(evt, closeModalOpen());
 });
