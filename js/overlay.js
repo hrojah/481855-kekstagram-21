@@ -7,7 +7,7 @@
   const uploadCancel = uploadOverlay.querySelector(`#upload-cancel`);
   const commentsText = document.querySelector(`.text__description`);
   const onOverlayEscPress = (evt) => {
-    if (evt.key === window.util.KEYDOWN.esc) {
+    if (evt.target === window.util.KEYDOWN.esc) {
       if (evt.target === window.form.hashtagsText || evt.target === commentsText) {
         evt.preventDefault();
       } else {
@@ -45,8 +45,6 @@
   });
 
   uploadCancel.addEventListener(`keydown`, (evt) => {
-    if (evt.key === window.util.KEYDOWN.enter) {
-      closeOverlay();
-    }
+    window.util.onPressEnter(evt, closeOverlay);
   });
 })();

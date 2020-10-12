@@ -1,6 +1,8 @@
 'use strict';
 
 (() => {
+  const MIN_COMMENT = 1;
+  const MAX_COMMENT = 5;
   const createPhotoDescriptionArray = (values) => {
     const photoDescription = [];
     for (let i = 1; i <= values; i++) {
@@ -9,7 +11,7 @@
         url: `photos/${i}.jpg`,
         description: ``,
         likes: window.mock.getRandomNumber(window.mock.MIN_LIKES, window.mock.MAX_LIKES),
-        comments: window.mock.getComments(window.mock.getRandomNumber(1, 5))
+        comments: window.mock.getComments(window.mock.getRandomNumber(MIN_COMMENT, MAX_COMMENT))
       });
     }
     return photoDescription;
