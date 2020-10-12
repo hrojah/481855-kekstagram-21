@@ -6,28 +6,23 @@
   const uploadOverlay = document.querySelector(`.img-upload__overlay`);
   const uploadCancel = uploadOverlay.querySelector(`#upload-cancel`);
   const commentsText = document.querySelector(`.text__description`);
-  const onOverlayEscPress = (evt) => {
-    if (evt.target === window.util.KEYDOWN.esc) {
-      if (evt.target === window.form.hashtagsText || evt.target === commentsText) {
-        evt.preventDefault();
-      } else {
-        evt.preventDefault();
-        closeOverlay();
-      }
-    }
-  };
-
   const openOverlay = () => {
     uploadOverlay.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
     window.effects.filterScale.classList.add(`hidden`);
-    document.addEventListener(`keydown`, onOverlayEscPress);
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.target === window.form.hashtagsText || evt.target === commentsText) {
+        evt.preventDefault();
+      } else {
+        closeOverlay();
+      }
+    });
   };
 
   const closeOverlay = () => {
     uploadOverlay.classList.add(`hidden`);
     body.classList.remove(`modal-open`);
-    document.removeEventListener(`keydown`, onOverlayEscPress);
+    document.removeEventListener(`keydown`, window.util.onPressEsc);
     window.effects.scaleSmaller.removeEventListener(`click`, window.effects.declineScale);
     window.effects.scaleBigger.removeEventListener(`click`, window.effects.increaseScale);
     upload.value = ``;
