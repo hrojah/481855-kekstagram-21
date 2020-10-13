@@ -1,21 +1,6 @@
 'use strict';
 
 (() => {
-  const MIN_COMMENT = 1;
-  const MAX_COMMENT = 5;
-  const createPhotoDescriptionArray = (values) => {
-    const photoDescription = [];
-    for (let i = 1; i <= values; i++) {
-      photoDescription.push({
-        id: i,
-        url: `photos/${i}.jpg`,
-        description: ``,
-        likes: window.mock.getRandomNumber(window.mock.MIN_LIKES, window.mock.MAX_LIKES),
-        comments: window.mock.getComments(window.mock.getRandomNumber(MIN_COMMENT, MAX_COMMENT))
-      });
-    }
-    return photoDescription;
-  };
 
   const renderPicture = (photoDescription) => {
     const pictureElement = cardsPicture.cloneNode(true);
@@ -31,13 +16,17 @@
   const pictures = document.querySelector(`.pictures`);
   const pictureFragment = document.createDocumentFragment();
 
-  const photoDescription = createPhotoDescriptionArray(25);
+  const createPicture = (photos) => {
+    for (let i = 0; i < photos.length; i++) {
+      pictureFragment.append(renderPicture(photos[i]));
+    }
+    pictures.append(pictureFragment);
+  };
 
-  for (let i = 0; i < photoDescription.length; i++) {
-    pictureFragment.append(renderPicture(photoDescription[i]));
-  }
+  const photoDescription = window.mock.createPhotoDescriptionArray(25);
 
-  pictures.append(pictureFragment);
+  createPicture(photoDescription);
+
   window.gallery = {
     photoDescription,
   };

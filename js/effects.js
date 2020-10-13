@@ -48,6 +48,7 @@
   const pin = filterScale.querySelector(`.effect-level__pin`);
   const scaleSmaller = document.querySelector(`.scale__control--smaller`);
   const scaleBigger = document.querySelector(`.scale__control--bigger`);
+
   const declineScale = () => {
     const value = parseInt(scaleValue.value, 10);
     if (value > 25) {
@@ -100,9 +101,11 @@
     }
     imgPreview.style.filter = ``;
   };
+
   pin.addEventListener(`mouseup`, effectLevelHandler);
   scaleSmaller.addEventListener(`click`, declineScale);
   scaleBigger.addEventListener(`click`, increaseScale);
+
   window.effects = {
     filterScale,
     scaleSmaller,

@@ -11,8 +11,10 @@
     numberTags: `длина хэштега не более 20 символов`,
     success: ``,
   };
+
   const form = document.querySelector(`.img-upload__form`);
   const hashtagsText = form.querySelector(`.text__hashtags`);
+
   const hashtagsNumber = (hashtaglist) => {
     return hashtaglist.length > MAX_HASHTAGS;
   };
@@ -71,11 +73,13 @@
       form.submit();
     }
   };
+
   hashtagsText.addEventListener(`input`, () => {
     showValidationMessage(VALIDATION_MESSAGES.success);
   });
   form.addEventListener(`submit`, formSubmit);
   form.addEventListener(`change`, window.effects.effectChangeHandler);
+
   window.form = {
     hashtagsText,
     form,
