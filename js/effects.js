@@ -1,6 +1,8 @@
 'use strict';
 
 (() => {
+  const MIN_COORD = 0;
+  const MAX_COORD = 453;
   const EFFECTS = {
     chrome: `effects__preview--chrome`,
     sepia: `effects__preview--sepia`,
@@ -45,6 +47,7 @@
   const scaleValue = document.querySelector(`.scale__control--value`);
   const filterScale = document.querySelector(`.img-upload__effect-level`);
   const effectLevel = filterScale.querySelector(`.effect-level__value`);
+  const effectLine = filterScale.querySelector(`.effect-level__depth`);
   const pin = filterScale.querySelector(`.effect-level__pin`);
   const scaleSmaller = document.querySelector(`.scale__control--smaller`);
   const scaleBigger = document.querySelector(`.scale__control--bigger`);
@@ -72,6 +75,8 @@
   const effectChangeHandler = (evt) => {
     if (evt.target.matches(`input[type='radio']`)) {
       effectLevel.value = 100;
+      pin.style.left = MAX_COORD + `px`;
+      effectLine.style.width = MAX_COORD + `px`;
       if (evt.target.value in EFFECTS) {
         filterScale.classList.remove(`hidden`);
         imgPreview.removeAttribute(`style`);
@@ -115,4 +120,46 @@
     increaseScale,
     effectChangeHandler,
   };
+
+  pin.addEventListener(`mousedown`, (evt) => {
+    evt.preventDefault();
+
+    let startCoords = {
+      x: evt.clientX,
+    };
+
+    const onMouseMove = (moveEvt) => {
+      moveEvt.preventDefault();
+
+      let shift = {
+        x: startCoords.x - moveEvt.clientX,
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+      };
+
+      let coord = (pin.offsetLeft - shift.x);
+      if (coord < MIN_COORD) {
+        coord = MIN_COORD;
+      } else if (coord > MAX_COORD) {
+        coord = MAX_COORD;
+      } else {
+        pin.style.left = coord + `px`;
+        effectLine.style.width = coord + `px`;
+        effectLevel.value = coord / MAX_COORD * 100;
+        effectLevelHandler();
+      }
+    };
+
+    const onMouseUp = (upEvt) => {
+      upEvt.preventDefault();
+
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
+    };
+
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
+  });
 })();
