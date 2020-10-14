@@ -145,8 +145,8 @@
       } else if (coord > MAX_COORD) {
         coord = MAX_COORD;
       } else {
-        pin.style.left = coord + `px`;
-        effectLine.style.width = coord + `px`;
+        pin.style.left = `${coord}px`;
+        effectLine.style.width = `${coord}px`;
         effectLevel.value = coord / MAX_COORD * 100;
         effectLevelHandler();
       }
