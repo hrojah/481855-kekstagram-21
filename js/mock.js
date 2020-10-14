@@ -5,6 +5,8 @@
   const MAX_LIKES = 200;
   const MIN_AVATAR = 1;
   const MAX_AVATAR = 6;
+  const MIN_COMMENT = 1;
+  const MAX_COMMENT = 5;
 
   const COMMENT_TEXT = [
     `Всё отлично!`,
@@ -46,24 +48,21 @@
     return comment;
   };
 
-  const renderComment = (comment) => {
-    const element = document.createElement(`li`);
-    const commentImg = document.createElement(`img`);
-    const commentText = document.createElement(`p`);
-    element.classList.add(`social__comment`);
-    commentImg.classList.add(`social__picture`);
-    commentText.classList.add(`social__text`);
-    element.append(commentImg, commentText);
-    commentImg.src = comment.avatar;
-    commentImg.alt = comment.name;
-    commentText.textContent = comment.message;
-    return element;
+  const createPhotoDescriptionArray = (values) => {
+    const photoDescription = [];
+    for (let i = 1; i <= values; i++) {
+      photoDescription.push({
+        id: i,
+        url: `photos/${i}.jpg`,
+        description: ``,
+        likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+        comments: getComments(getRandomNumber(MIN_COMMENT, MAX_COMMENT))
+      });
+    }
+    return photoDescription;
   };
+
   window.mock = {
-    MIN_LIKES,
-    MAX_LIKES,
-    renderComment,
-    getComments,
-    getRandomNumber,
+    createPhotoDescriptionArray,
   };
 })();

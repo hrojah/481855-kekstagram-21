@@ -1,11 +1,12 @@
 'use strict';
 
 (() => {
-  const body = document.querySelector(`body`);
+  const body = document.body;
   const upload = document.querySelector(`#upload-file`);
   const uploadOverlay = document.querySelector(`.img-upload__overlay`);
   const uploadCancel = uploadOverlay.querySelector(`#upload-cancel`);
   const commentsText = document.querySelector(`.text__description`);
+
   const onOverlayEscPress = (evt) => {
     if (evt.key === window.util.KEYDOWN.esc) {
       if (evt.target === window.form.hashtagsText || evt.target === commentsText) {
@@ -36,6 +37,7 @@
     window.effects.imgPreview.className = ``;
     window.form.hashtagsText.value = ``;
   };
+
   upload.addEventListener(`change`, () => {
     openOverlay();
   });
