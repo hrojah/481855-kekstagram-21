@@ -12,20 +12,25 @@
     return pictureElement;
   };
 
-  const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
-  const pictures = document.querySelector(`.pictures`);
-  const pictureFragment = document.createDocumentFragment();
+  let photoDescription;
+
+  let cardsPicture;
 
   const createPicture = (photos) => {
+    cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
+    const pictures = document.querySelector(`.pictures`);
+    const pictureFragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
       pictureFragment.append(renderPicture(photos[i]));
     }
     pictures.append(pictureFragment);
   };
 
-  const photoDescription = window.mock.createPhotoDescriptionArray(25);
+  window.load((response) => {
+    photoDescription = response;
 
-  createPicture(photoDescription);
+    createPicture(photoDescription);
+  });
 
   window.gallery = {
     photoDescription,

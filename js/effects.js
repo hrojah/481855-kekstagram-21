@@ -77,6 +77,7 @@
       effectLevel.value = 100;
       pin.style.left = MAX_COORD + `px`;
       effectLine.style.width = MAX_COORD + `px`;
+      imgPreview.style.transform = `scale(1)`;
       if (evt.target.value in EFFECTS) {
         filterScale.classList.remove(`hidden`);
         imgPreview.removeAttribute(`style`);
