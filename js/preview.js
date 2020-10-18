@@ -29,9 +29,10 @@
   };
 
   const modalOpenHandler = (evt) => {
-    for (let i = 0; i < window.gallery.photoDescription.length; i++) {
-      if (parseInt(evt.target.closest(`.picture`).hash.slice(1), 10) === window.gallery.photoDescription[i].id) {
-        renderBigPicture(window.gallery.photoDescription[i]);
+    const photos = window.getPhotos();
+    for (let i = 0; i < photos.length; i++) {
+      if (parseInt(evt.target.id, 10) === i) {
+        renderBigPicture(photos[i]);
         bigPicture.classList.remove(`hidden`);
         document.addEventListener(`keydown`, (keydownEvent) => {
           window.util.onPressEsc(keydownEvent, closeModalOpen);
@@ -56,16 +57,22 @@
   commentCount.classList.add(`hidden`);
   commentLoader.classList.add(`hidden`);
 
-  document.querySelectorAll(`.picture`).forEach((element) => {
-    element.addEventListener(`click`, modalOpenHandler);
-    element.addEventListener(`keydown`, (evt) => {
-      window.util.onPressEnter(evt, modalOpenHandler);
+  const openPreview = () => {
+    document.querySelectorAll(`.picture`).forEach((element) => {
+      element.addEventListener(`click`, modalOpenHandler);
+      element.addEventListener(`keydown`, (evt) => {
+        window.util.onPressEnter(evt, modalOpenHandler);
+      });
     });
-  });
+  };
 
   closeBigPicture.addEventListener(`click`, closeModalOpen);
 
   closeBigPicture.addEventListener(`keydown`, (evt) => {
     window.util.onPressEnter(evt, closeModalOpen);
   });
+
+  window.preview = {
+    openPreview,
+  };
 })();

@@ -2,9 +2,9 @@
 
 (() => {
 
-  const renderPicture = (photoDescription) => {
+  const renderPicture = (index, photoDescription) => {
     const pictureElement = cardsPicture.cloneNode(true);
-    pictureElement.href = `#` + photoDescription.id;
+    pictureElement.id = index;
     pictureElement.querySelector(`.picture__img`).src = photoDescription.url;
     pictureElement.querySelector(`.picture__likes`).textContent = photoDescription.likes;
     pictureElement.querySelector(`.picture__comments`).textContent = photoDescription.comments.length;
@@ -21,18 +21,18 @@
     const pictures = document.querySelector(`.pictures`);
     const pictureFragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
-      pictureFragment.append(renderPicture(photos[i]));
+      pictureFragment.append(renderPicture(i, photos[i]));
     }
     pictures.append(pictureFragment);
   };
 
   window.load((response) => {
     photoDescription = response;
-
     createPicture(photoDescription);
+    window.preview.openPreview();
   });
 
-  window.gallery = {
-    photoDescription,
+  window.getPhotos = () => {
+    return photoDescription;
   };
 })();
