@@ -35,6 +35,7 @@
     const errorContainer = errorWindow.querySelector(`.error__inner`);
     const errorButton = errorWindow.querySelector(`.error__button`);
     errorContainer.removeChild(errorButton);
+    errorContainer.style.width = 700 + `px`;
     errorWindow.querySelector(`.error__title`).textContent = errorMessage;
     main.append(errorWindow);
   });
