@@ -1,20 +1,20 @@
 'use strict';
 
 (() => {
+  let cardsPicture;
+  let photoDescription;
+  const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  const main = document.querySelector(`main`);
 
-  const renderPicture = (index, photoDescription) => {
+  const renderPicture = (index, photos) => {
     const pictureElement = cardsPicture.cloneNode(true);
     pictureElement.id = index;
-    pictureElement.querySelector(`.picture__img`).src = photoDescription.url;
-    pictureElement.querySelector(`.picture__likes`).textContent = photoDescription.likes;
-    pictureElement.querySelector(`.picture__comments`).textContent = photoDescription.comments.length;
+    pictureElement.querySelector(`.picture__img`).src = photos.url;
+    pictureElement.querySelector(`.picture__likes`).textContent = photos.likes;
+    pictureElement.querySelector(`.picture__comments`).textContent = photos.comments.length;
 
     return pictureElement;
   };
-
-  let photoDescription;
-
-  let cardsPicture;
 
   const createPicture = (photos) => {
     cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
@@ -29,7 +29,14 @@
   window.load((response) => {
     photoDescription = response;
     createPicture(photoDescription);
-    window.preview.openPreview();
+    window.preview.initPictureHandlers();
+  }, (errorMessage) => {
+    const errorWindow = errorModal.cloneNode(true);
+    const errorContainer = errorWindow.querySelector(`.error__inner`);
+    const errorButton = errorWindow.querySelector(`.error__button`);
+    errorContainer.removeChild(errorButton);
+    errorWindow.querySelector(`.error__title`).textContent = errorMessage;
+    main.append(errorWindow);
   });
 
   window.getPhotos = () => {
