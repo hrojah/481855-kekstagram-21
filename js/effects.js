@@ -151,8 +151,6 @@
   });
 
   pin.addEventListener(`mouseup`, effectLevelHandler);
-  scaleSmaller.addEventListener(`click`, declineScale);
-  scaleBigger.addEventListener(`click`, increaseScale);
 
   window.effects = {
     scaleValue,
@@ -163,5 +161,6 @@
     declineScale,
     increaseScale,
     effectChangeHandler,
+    effectLevelHandler,
   };
 })();
