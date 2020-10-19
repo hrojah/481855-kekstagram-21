@@ -22,6 +22,8 @@
     uploadOverlay.classList.remove(`hidden`);
     body.classList.add(`modal-open`);
     window.effects.filterScale.classList.add(`hidden`);
+    window.effects.scaleSmaller.addEventListener(`click`, window.effects.declineScale);
+    window.effects.scaleBigger.addEventListener(`click`, window.effects.increaseScale);
     document.addEventListener(`keydown`, onOverlayEscPress);
   };
 

@@ -77,6 +77,8 @@
       effectLevel.value = 100;
       pin.style.left = MAX_COORD + `px`;
       effectLine.style.width = MAX_COORD + `px`;
+      imgPreview.style.transform = `scale(1)`;
+      scaleValue.value = 100 + `%`;
       if (evt.target.value in EFFECTS) {
         filterScale.classList.remove(`hidden`);
         imgPreview.removeAttribute(`style`);
@@ -107,20 +109,6 @@
     imgPreview.style.filter = ``;
   };
 
-  pin.addEventListener(`mouseup`, effectLevelHandler);
-  scaleSmaller.addEventListener(`click`, declineScale);
-  scaleBigger.addEventListener(`click`, increaseScale);
-
-  window.effects = {
-    filterScale,
-    scaleSmaller,
-    scaleBigger,
-    imgPreview,
-    declineScale,
-    increaseScale,
-    effectChangeHandler,
-  };
-
   pin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
 
@@ -144,12 +132,11 @@
         coord = MIN_COORD;
       } else if (coord > MAX_COORD) {
         coord = MAX_COORD;
-      } else {
-        pin.style.left = coord + `px`;
-        effectLine.style.width = coord + `px`;
-        effectLevel.value = coord / MAX_COORD * 100;
-        effectLevelHandler();
       }
+      pin.style.left = `${coord}px`;
+      effectLine.style.width = `${coord}px`;
+      effectLevel.value = coord / MAX_COORD * 100;
+      effectLevelHandler();
     };
 
     const onMouseUp = (upEvt) => {
@@ -162,4 +149,18 @@
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
   });
+
+  pin.addEventListener(`mouseup`, effectLevelHandler);
+
+  window.effects = {
+    scaleValue,
+    filterScale,
+    scaleSmaller,
+    scaleBigger,
+    imgPreview,
+    declineScale,
+    increaseScale,
+    effectChangeHandler,
+    effectLevelHandler,
+  };
 })();
