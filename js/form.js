@@ -90,8 +90,8 @@
   const upload = () => {
     window.upload(new FormData(form), () => {
       successWindow = successModal.cloneNode(true);
-      main.append(successWindow);
       window.overlay.closeOverlay();
+      main.append(successWindow);
       successButton = document.querySelector(`.success__button`);
       successButton.addEventListener(`click`, closeSuccessModal);
       document.addEventListener(`click`, (evt) => {
@@ -104,8 +104,8 @@
       });
     }, () => {
       errorWindow = errorModal.cloneNode(true);
-      main.append(errorWindow);
       window.overlay.closeOverlay();
+      main.append(errorWindow);
       errorButton = document.querySelector(`.error__button`);
       errorButton.addEventListener(`click`, closeErrorModal);
       document.addEventListener(`keydown`, (keydownEvent) => {
