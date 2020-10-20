@@ -44,7 +44,7 @@
   const hashtagValidity = () => {
     const hashes = hashtagsText.value.toLowerCase().trim();
     if (!hashes) {
-      return ``;
+      return VALIDATION_MESSAGES.success;
     }
     const hashtags = hashes.split(` `);
     if (hashtagsNumber(hashtags)) {
