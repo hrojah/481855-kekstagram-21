@@ -11,8 +11,6 @@
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
-    xhr.open(`GET`, URL);
-
     xhr.addEventListener(`load`, () => {
       if (xhr.status === STATUS_CODE.OK) {
         onSuccess(xhr.response);
@@ -30,6 +28,7 @@
 
     xhr.timeout = TIMEOUT;
 
+    xhr.open(`GET`, URL);
     xhr.send();
   };
 })();

@@ -11,9 +11,17 @@
     numberTags: `длина хэштега не более 20 символов`,
     success: ``,
   };
-
+  const main = document.querySelector(`main`);
+  const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  const successModal = document.querySelector(`#success`).content.querySelector(`section`);
   const form = document.querySelector(`.img-upload__form`);
   const hashtagsText = form.querySelector(`.text__hashtags`);
+  const succesInner = document.querySelector(`.success__inner`);
+  const errorInner = document.querySelector(`.error__inner`);
+  let successWindow;
+  let successButton;
+  let errorWindow;
+  let errorButton;
 
   const hashtagsNumber = (hashtaglist) => {
     return hashtaglist.length > MAX_HASHTAGS;
@@ -65,18 +73,63 @@
     return VALIDATION_MESSAGES.success;
   };
 
+  const upload = () => {
+    window.upload(new FormData(form), () => {
+      successWindow = successModal.cloneNode(true);
+      main.append(successWindow);
+      window.overlay.closeOverlay();
+      successButton = document.querySelector(`.success__button`);
+      successButton.addEventListener(`click`, closeSuccessModal);
+      document.addEventListener(`click`, (evt) => {
+        if (evt.target !== succesInner) {
+          closeSuccessModal();
+        }
+      });
+      document.addEventListener(`keydown`, (keydownEvent) => {
+        window.util.onPressEsc(keydownEvent, closeSuccessModal);
+      });
+    }, () => {
+      errorWindow = errorModal.cloneNode(true);
+      main.append(errorWindow);
+      window.overlay.closeOverlay();
+      errorButton = document.querySelector(`.error__button`);
+      errorButton.addEventListener(`click`, closeErrorModal);
+      document.addEventListener(`keydown`, (keydownEvent) => {
+        window.util.onPressEsc(keydownEvent, closeErrorModal);
+      });
+      document.addEventListener(`click`, (evt) => {
+        if (evt.target !== errorInner) {
+          closeSuccessModal();
+        }
+      });
+    });
+  };
+
   const formSubmit = (evt) => {
     evt.preventDefault();
     const validationMessage = hashtagValidity();
     showValidationMessage(validationMessage);
     if (validationMessage === VALIDATION_MESSAGES.success) {
-      form.submit();
+      upload();
     }
+  };
+
+  const closeErrorModal = () => {
+    main.removeChild(errorWindow);
+    errorButton.removeEventListener(`click`, closeErrorModal);
+    errorWindow.removeEventListener(`keydown`, closeErrorModal);
+  };
+
+  const closeSuccessModal = () => {
+    main.removeChild(successWindow);
+    successButton.removeEventListener(`click`, closeSuccessModal);
+    successWindow.removeEventListener(`keydown`, closeSuccessModal);
   };
 
   hashtagsText.addEventListener(`input`, () => {
     showValidationMessage(VALIDATION_MESSAGES.success);
   });
+
   form.addEventListener(`submit`, formSubmit);
   form.addEventListener(`change`, window.effects.effectChangeHandler);
 
