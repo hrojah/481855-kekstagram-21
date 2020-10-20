@@ -73,6 +73,20 @@
     return VALIDATION_MESSAGES.success;
   };
 
+  const closeErrorModal = () => {
+    errorWindow.remove();
+    errorButton.removeEventListener(`click`, closeErrorModal);
+    document.removeEventListener(`keydown`, closeErrorModal);
+    document.removeEventListener(`click`, closeErrorModal);
+  };
+
+  const closeSuccessModal = () => {
+    successWindow.remove();
+    successButton.removeEventListener(`click`, closeSuccessModal);
+    document.removeEventListener(`keydown`, closeSuccessModal);
+    document.removeEventListener(`click`, closeSuccessModal);
+  };
+
   const upload = () => {
     window.upload(new FormData(form), () => {
       successWindow = successModal.cloneNode(true);
@@ -112,18 +126,6 @@
     if (validationMessage === VALIDATION_MESSAGES.success) {
       upload();
     }
-  };
-
-  const closeErrorModal = () => {
-    main.removeChild(errorWindow);
-    errorButton.removeEventListener(`click`, closeErrorModal);
-    errorWindow.removeEventListener(`keydown`, closeErrorModal);
-  };
-
-  const closeSuccessModal = () => {
-    main.removeChild(successWindow);
-    successButton.removeEventListener(`click`, closeSuccessModal);
-    successWindow.removeEventListener(`keydown`, closeSuccessModal);
   };
 
   hashtagsText.addEventListener(`input`, () => {
