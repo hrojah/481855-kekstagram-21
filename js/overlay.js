@@ -51,4 +51,8 @@
   uploadCancel.addEventListener(`keydown`, (evt) => {
     window.util.onPressEnter(evt, closeOverlay);
   });
+
+  window.overlay = {
+    closeOverlay,
+  };
 })();

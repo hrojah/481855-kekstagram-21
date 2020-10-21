@@ -65,12 +65,13 @@
   };
 
   closeBigPicture.addEventListener(`click`, closeModalOpen);
-  commentCount.classList.add(`hidden`);
-  commentLoader.classList.add(`hidden`);
 
   closeBigPicture.addEventListener(`keydown`, (evt) => {
     window.util.onPressEnter(evt, closeModalOpen);
   });
+
+  commentCount.classList.add(`hidden`);
+  commentLoader.classList.add(`hidden`);
 
   window.preview = {
     initPictureHandlers,

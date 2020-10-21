@@ -11,9 +11,17 @@
     numberTags: `длина хэштега не более 20 символов`,
     success: ``,
   };
-
+  const main = document.querySelector(`main`);
+  const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  const successModal = document.querySelector(`#success`).content.querySelector(`section`);
   const form = document.querySelector(`.img-upload__form`);
   const hashtagsText = form.querySelector(`.text__hashtags`);
+  const succesInner = document.querySelector(`.success__inner`);
+  const errorInner = document.querySelector(`.error__inner`);
+  let successWindow;
+  let successButton;
+  let errorWindow;
+  let errorButton;
 
   const hashtagsNumber = (hashtaglist) => {
     return hashtaglist.length > MAX_HASHTAGS;
@@ -44,7 +52,7 @@
   const hashtagValidity = () => {
     const hashes = hashtagsText.value.toLowerCase().trim();
     if (!hashes) {
-      return ``;
+      return VALIDATION_MESSAGES.success;
     }
     const hashtags = hashes.split(` `);
     if (hashtagsNumber(hashtags)) {
@@ -65,18 +73,65 @@
     return VALIDATION_MESSAGES.success;
   };
 
+  const closeErrorModal = () => {
+    errorWindow.remove();
+    errorButton.removeEventListener(`click`, closeErrorModal);
+    document.removeEventListener(`keydown`, closeErrorModal);
+    document.removeEventListener(`click`, closeErrorModal);
+  };
+
+  const closeSuccessModal = () => {
+    successWindow.remove();
+    successButton.removeEventListener(`click`, closeSuccessModal);
+    document.removeEventListener(`keydown`, closeSuccessModal);
+    document.removeEventListener(`click`, closeSuccessModal);
+  };
+
+  const upload = () => {
+    window.upload(new FormData(form), () => {
+      successWindow = successModal.cloneNode(true);
+      window.overlay.closeOverlay();
+      main.append(successWindow);
+      successButton = document.querySelector(`.success__button`);
+      successButton.addEventListener(`click`, closeSuccessModal);
+      document.addEventListener(`click`, (evt) => {
+        if (evt.target !== succesInner) {
+          closeSuccessModal();
+        }
+      });
+      document.addEventListener(`keydown`, (keydownEvent) => {
+        window.util.onPressEsc(keydownEvent, closeSuccessModal);
+      });
+    }, () => {
+      errorWindow = errorModal.cloneNode(true);
+      window.overlay.closeOverlay();
+      main.append(errorWindow);
+      errorButton = document.querySelector(`.error__button`);
+      errorButton.addEventListener(`click`, closeErrorModal);
+      document.addEventListener(`keydown`, (keydownEvent) => {
+        window.util.onPressEsc(keydownEvent, closeErrorModal);
+      });
+      document.addEventListener(`click`, (evt) => {
+        if (evt.target !== errorInner) {
+          closeSuccessModal();
+        }
+      });
+    });
+  };
+
   const formSubmit = (evt) => {
     evt.preventDefault();
     const validationMessage = hashtagValidity();
     showValidationMessage(validationMessage);
     if (validationMessage === VALIDATION_MESSAGES.success) {
-      form.submit();
+      upload();
     }
   };
 
   hashtagsText.addEventListener(`input`, () => {
     showValidationMessage(VALIDATION_MESSAGES.success);
   });
+
   form.addEventListener(`submit`, formSubmit);
   form.addEventListener(`change`, window.effects.effectChangeHandler);
 
