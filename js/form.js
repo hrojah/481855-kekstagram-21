@@ -16,8 +16,6 @@
   const successModal = document.querySelector(`#success`).content.querySelector(`section`);
   const form = document.querySelector(`.img-upload__form`);
   const hashtagsText = form.querySelector(`.text__hashtags`);
-  const succesInner = document.querySelector(`.success__inner`);
-  const errorInner = document.querySelector(`.error__inner`);
   let successWindow;
   let successButton;
   let errorWindow;
@@ -87,35 +85,37 @@
     document.removeEventListener(`click`, closeSuccessModal);
   };
 
-  const upload = () => {
-    window.upload(new FormData(form), () => {
-      successWindow = successModal.cloneNode(true);
-      window.overlay.closeOverlay();
-      main.append(successWindow);
-      successButton = document.querySelector(`.success__button`);
-      successButton.addEventListener(`click`, closeSuccessModal);
-      document.addEventListener(`click`, (evt) => {
-        if (evt.target !== succesInner) {
-          closeSuccessModal();
-        }
-      });
-      document.addEventListener(`keydown`, (keydownEvent) => {
-        window.util.onPressEsc(keydownEvent, closeSuccessModal);
-      });
-    }, () => {
-      errorWindow = errorModal.cloneNode(true);
-      window.overlay.closeOverlay();
-      main.append(errorWindow);
-      errorButton = document.querySelector(`.error__button`);
-      errorButton.addEventListener(`click`, closeErrorModal);
-      document.addEventListener(`keydown`, (keydownEvent) => {
-        window.util.onPressEsc(keydownEvent, closeErrorModal);
-      });
-      document.addEventListener(`click`, (evt) => {
-        if (evt.target !== errorInner) {
-          closeSuccessModal();
-        }
-      });
+  const onSuccess = () => {
+    successWindow = successModal.cloneNode(true);
+    window.overlay.closeOverlay();
+    main.append(successWindow);
+    successButton = document.querySelector(`.success__button`);
+    successButton.addEventListener(`click`, closeSuccessModal);
+    const success = document.querySelector(`.success`);
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.util.onPressEsc(keydownEvent, closeSuccessModal);
+    });
+    success.addEventListener(`click`, (evt) => {
+      if (!evt.target.closest(`.success__inner`)) {
+        closeSuccessModal();
+      }
+    });
+  };
+
+  const onError = () => {
+    errorWindow = errorModal.cloneNode(true);
+    window.overlay.closeOverlay();
+    main.append(errorWindow);
+    errorButton = document.querySelector(`.error__button`);
+    errorButton.addEventListener(`click`, closeErrorModal);
+    const error = document.querySelector(`.error`);
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.util.onPressEsc(keydownEvent, closeErrorModal);
+    });
+    error.addEventListener(`click`, (evt) => {
+      if (!evt.target.closest(`.error__inner`)) {
+        closeSuccessModal();
+      }
     });
   };
 
@@ -124,7 +124,7 @@
     const validationMessage = hashtagValidity();
     showValidationMessage(validationMessage);
     if (validationMessage === VALIDATION_MESSAGES.success) {
-      upload();
+      window.api.upload(new FormData(form), onSuccess, onError);
     }
   };
 
@@ -138,5 +138,6 @@
   window.form = {
     hashtagsText,
     form,
+    main,
   };
 })();
