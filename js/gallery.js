@@ -4,6 +4,7 @@
   let photoDescription;
   const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
+  const filter = document.querySelector(`.img-filters`);
 
   const renderPicture = (index, photo) => {
     const pictureElement = cardsPicture.cloneNode(true);
@@ -25,6 +26,7 @@
   };
 
   window.api.load((response) => {
+    filter.classList.remove(`img-filters--inactive`);
     photoDescription = response;
     createPicture(photoDescription);
     window.preview.initPictureHandlers();
@@ -38,7 +40,12 @@
     window.form.main.append(errorWindow);
   });
 
-  window.getPhotos = () => {
+  const getPhotos = () => {
     return photoDescription;
+  };
+
+  window.gallery = {
+    getPhotos,
+    createPicture,
   };
 })();

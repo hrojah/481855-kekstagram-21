@@ -33,7 +33,7 @@
   };
 
   const modalOpenHandler = (evt) => {
-    const photos = window.getPhotos();
+    const photos = window.gallery.getPhotos();
     const index = parseInt(evt.target.closest(`.picture`).id, 10);
     renderBigPicture(photos[index]);
     bigPicture.classList.remove(`hidden`);
@@ -41,6 +41,15 @@
       window.util.onPressEsc(keydownEvent, closeModalOpen);
     });
   };
+
+  const commentsFilterButton = document.querySelector(`#filter-discussed`);
+  const countCommentsFilter = () => {
+    const commentFilterPhoto = window.gallery.getPhotos().slice();
+    window.gallery.createPicture(commentFilterPhoto.sort((left, right) => {
+      return commentFilterPhoto.comments.length(right) - commentFilterPhoto.comments.length(left);
+    }));
+  };
+  commentsFilterButton.addEventListener(`click`, countCommentsFilter);
 
   const renderBigPicture = (photo) => {
     bigPictureImg.src = photo.url;
