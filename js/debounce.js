@@ -7,12 +7,12 @@
 
     let lastTimeout = null;
 
-    return () => {
+    return (...parameters) => {
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(() => {
-        cb.apply();
+        cb.apply(null, parameters);
       }, DEBOUNCE_INTERVAL);
     };
   };
