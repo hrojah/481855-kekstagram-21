@@ -42,15 +42,6 @@
     });
   };
 
-  const commentsFilterButton = document.querySelector(`#filter-discussed`);
-  const countCommentsFilter = () => {
-    const commentFilterPhoto = window.gallery.getPhotos().slice();
-    window.gallery.createPicture(commentFilterPhoto.sort((left, right) => {
-      return commentFilterPhoto.comments.length(right) - commentFilterPhoto.comments.length(left);
-    }));
-  };
-  commentsFilterButton.addEventListener(`click`, countCommentsFilter);
-
   const renderBigPicture = (photo) => {
     bigPictureImg.src = photo.url;
     likesCount.textContent = photo.likes;

@@ -5,6 +5,11 @@
   const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
   const filter = document.querySelector(`.img-filters`);
+  const pictures = document.querySelector(`.pictures`);
+
+  const getPhotos = () => {
+    return photoDescription;
+  };
 
   const renderPicture = (index, photo) => {
     const pictureElement = cardsPicture.cloneNode(true);
@@ -16,8 +21,7 @@
     return pictureElement;
   };
 
-  const createPicture = (photos) => {
-    const pictures = document.querySelector(`.pictures`);
+  const createPictures = (photos) => {
     const pictureFragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
       pictureFragment.append(renderPicture(i, photos[i]));
@@ -26,9 +30,9 @@
   };
 
   window.api.load((response) => {
-    filter.classList.remove(`img-filters--inactive`);
     photoDescription = response;
-    createPicture(photoDescription);
+    createPictures(photoDescription);
+    filter.classList.remove(`img-filters--inactive`);
     window.preview.initPictureHandlers();
   }, (errorMessage) => {
     const errorWindow = errorModal.cloneNode(true);
@@ -40,12 +44,9 @@
     window.form.main.append(errorWindow);
   });
 
-  const getPhotos = () => {
-    return photoDescription;
-  };
-
   window.gallery = {
+    pictures,
     getPhotos,
-    createPicture,
+    createPictures,
   };
 })();
