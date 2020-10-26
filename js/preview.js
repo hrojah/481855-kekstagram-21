@@ -33,7 +33,7 @@
   };
 
   const modalOpenHandler = (evt) => {
-    const photos = window.getPhotos();
+    const photos = window.gallery.getPhotos();
     const index = parseInt(evt.target.closest(`.picture`).id, 10);
     renderBigPicture(photos[index]);
     bigPicture.classList.remove(`hidden`);

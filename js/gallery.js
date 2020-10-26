@@ -4,7 +4,12 @@
   let photoDescription;
   const cardsPicture = document.querySelector(`#picture`).content.querySelector(`a`);
   const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
-  const main = document.querySelector(`main`);
+  const filter = document.querySelector(`.img-filters`);
+  const pictures = document.querySelector(`.pictures`);
+
+  const getPhotos = () => {
+    return photoDescription;
+  };
 
   const renderPicture = (index, photo) => {
     const pictureElement = cardsPicture.cloneNode(true);
@@ -16,8 +21,7 @@
     return pictureElement;
   };
 
-  const createPicture = (photos) => {
-    const pictures = document.querySelector(`.pictures`);
+  const createPictures = (photos) => {
     const pictureFragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
       pictureFragment.append(renderPicture(i, photos[i]));
@@ -25,9 +29,10 @@
     pictures.append(pictureFragment);
   };
 
-  window.load((response) => {
+  window.api.load((response) => {
     photoDescription = response;
-    createPicture(photoDescription);
+    createPictures(photoDescription);
+    filter.classList.remove(`img-filters--inactive`);
     window.preview.initPictureHandlers();
   }, (errorMessage) => {
     const errorWindow = errorModal.cloneNode(true);
@@ -36,10 +41,12 @@
     errorContainer.removeChild(errorButton);
     errorContainer.style.width = `${700}px`;
     errorWindow.querySelector(`.error__title`).textContent = errorMessage;
-    main.append(errorWindow);
+    window.form.main.append(errorWindow);
   });
 
-  window.getPhotos = () => {
-    return photoDescription;
+  window.gallery = {
+    pictures,
+    getPhotos,
+    createPictures,
   };
 })();
