@@ -2,8 +2,7 @@
 
 (() => {
   const bigPicture = document.querySelector(`.big-picture`);
-  const commentCount = bigPicture.querySelector(`.social__comment-count`);
-  const commentLoader = bigPicture.querySelector(`.comments-loader`);
+  const commentsLoader = bigPicture.querySelector(`.comments-loader`);
   const socialComments = bigPicture.querySelector(`.social__comments`);
   const socialCommentText = bigPicture.querySelector(`.social__footer-text`);
   const closeBigPicture = bigPicture.querySelector(`.big-picture__cancel`);
@@ -11,6 +10,8 @@
   const likesCount = bigPicture.querySelector(`.likes-count`);
   const description = bigPicture.querySelector(`.social__caption`);
   const commentsCount = bigPicture.querySelector(`.comments-count`);
+  let firstComments;
+  let comments;
 
   const renderComment = (comment) => {
     const element = document.createElement(`li`);
@@ -26,10 +27,22 @@
     return element;
   };
 
+  const getComments = (com, commentsContainer) => {
+    firstComments = com.splice(0, 5);
+    for (let i = 0; i < firstComments.length; i++) {
+      commentsContainer.appendChild(renderComment(firstComments[i]));
+    }
+    if (firstComments.length === 0) {
+      commentsLoader.classList.add(`hidden`);
+    }
+  };
+
   const closeModalOpen = () => {
     bigPicture.classList.add(`hidden`);
     socialCommentText.value = ``;
     document.removeEventListener(`keydown`, window.utils.onPressEsc);
+    commentsLoader.removeEventListener(`click`, commentsLoaderClickListener);
+    commentsLoader.removeEventListener(`keydown`, window.utils.onPressEnter);
   };
 
   const modalOpenHandler = (evt) => {
@@ -40,6 +53,14 @@
     document.addEventListener(`keydown`, (keydownEvent) => {
       window.utils.onPressEsc(keydownEvent, closeModalOpen);
     });
+    commentsLoader.addEventListener(`click`, commentsLoaderClickListener);
+    commentsLoader.addEventListener(`keydown`, (keyEvt) => {
+      window.utils.onPressEnter(keyEvt, commentsLoaderClickListener);
+    });
+  };
+
+  const commentsLoaderClickListener = () => {
+    getComments(firstComments, comments);
   };
 
   const renderBigPicture = (photo) => {
@@ -47,10 +68,9 @@
     likesCount.textContent = photo.likes;
     description.textContent = photo.description;
     commentsCount.textContent = photo.comments.length;
-    const comments = document.createDocumentFragment();
-    for (let i = 0; i < photo.comments.length; i++) {
-      comments.appendChild(renderComment(photo.comments[i]));
-    }
+    comments = document.createDocumentFragment();
+    const photoComments = photo.comments.slice();
+    getComments(photoComments, comments);
     socialComments.innerHTML = ``;
     socialComments.append(comments);
   };
