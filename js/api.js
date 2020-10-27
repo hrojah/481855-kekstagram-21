@@ -8,7 +8,7 @@
   };
   const TIMEOUT = 10000;
 
-  const load = (onSuccess, onError) => {
+  const ajax = (method, url, data, onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -16,7 +16,7 @@
       if (xhr.status === STATUS_CODE.OK) {
         onSuccess(xhr.response);
       } else {
-        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
       }
     });
 
@@ -24,25 +24,21 @@
       onError(`Произошла ошибка соединения`);
     });
     xhr.addEventListener(`timeout`, () => {
-      onError(`Запрос не успел выполнится за ` + xhr.timeout + `мс`);
+      onError(`Запрос не успел выполнится за ${xhr.timeout} мс`);
     });
 
     xhr.timeout = TIMEOUT;
 
-    xhr.open(`GET`, URL_LOAD);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
+  };
+
+  const load = (onSuccess, onError) => {
+    ajax(`GET`, URL_LOAD, null, onSuccess, onError);
   };
 
   const upload = (data, onSuccess, onError) => {
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = `json`;
-
-    xhr.addEventListener(`load`, () => {
-      onSuccess(xhr.response);
-    }, onError);
-
-    xhr.open(`POST`, URL_UPLOAD);
-    xhr.send(data);
+    ajax(`POST`, URL_UPLOAD, data, onSuccess, onError);
   };
 
   window.api = {

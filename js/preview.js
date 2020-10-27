@@ -29,7 +29,7 @@
   const closeModalOpen = () => {
     bigPicture.classList.add(`hidden`);
     socialCommentText.value = ``;
-    document.removeEventListener(`keydown`, window.util.onPressEsc);
+    document.removeEventListener(`keydown`, window.utils.onPressEsc);
   };
 
   const modalOpenHandler = (evt) => {
@@ -38,7 +38,7 @@
     renderBigPicture(photos[index]);
     bigPicture.classList.remove(`hidden`);
     document.addEventListener(`keydown`, (keydownEvent) => {
-      window.util.onPressEsc(keydownEvent, closeModalOpen);
+      window.utils.onPressEsc(keydownEvent, closeModalOpen);
     });
   };
 
@@ -59,7 +59,7 @@
     document.querySelectorAll(`.picture`).forEach((element) => {
       element.addEventListener(`click`, modalOpenHandler);
       element.addEventListener(`keydown`, (evt) => {
-        window.util.onPressEnter(evt, modalOpenHandler);
+        window.utils.onPressEnter(evt, modalOpenHandler);
       });
     });
   };
@@ -67,11 +67,8 @@
   closeBigPicture.addEventListener(`click`, closeModalOpen);
 
   closeBigPicture.addEventListener(`keydown`, (evt) => {
-    window.util.onPressEnter(evt, closeModalOpen);
+    window.utils.onPressEnter(evt, closeModalOpen);
   });
-
-  commentCount.classList.add(`hidden`);
-  commentLoader.classList.add(`hidden`);
 
   window.preview = {
     initPictureHandlers,

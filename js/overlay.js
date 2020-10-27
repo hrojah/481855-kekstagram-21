@@ -8,7 +8,7 @@
   const commentsText = document.querySelector(`.text__description`);
 
   const onOverlayEscPress = (evt) => {
-    if (evt.key === window.util.KEYDOWN.esc) {
+    if (evt.key === window.utils.KEYDOWN.esc) {
       if (evt.target === window.form.hashtagsText || evt.target === commentsText) {
         evt.preventDefault();
       } else {
@@ -49,7 +49,7 @@
   });
 
   uploadCancel.addEventListener(`keydown`, (evt) => {
-    window.util.onPressEnter(evt, closeOverlay);
+    window.utils.onPressEnter(evt, closeOverlay);
   });
 
   window.overlay = {
