@@ -27,14 +27,18 @@
     return element;
   };
 
-  const getComments = (com, commentsContainer) => {
-    firstComments = com.splice(0, 5);
+  const getComments = (comment, commentsContainer) => {
+    firstComments = comment.splice(0, 5);
     for (let i = 0; i < firstComments.length; i++) {
       commentsContainer.appendChild(renderComment(firstComments[i]));
     }
     if (firstComments.length === 0) {
       commentsLoader.classList.add(`hidden`);
     }
+  };
+
+  const commentsLoaderClickListener = () => {
+    getComments(firstComments, comments);
   };
 
   const closeModalOpen = () => {
@@ -57,10 +61,6 @@
     commentsLoader.addEventListener(`keydown`, (keyEvt) => {
       window.utils.onPressEnter(keyEvt, commentsLoaderClickListener);
     });
-  };
-
-  const commentsLoaderClickListener = () => {
-    getComments(firstComments, comments);
   };
 
   const renderBigPicture = (photo) => {
