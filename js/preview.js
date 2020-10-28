@@ -11,7 +11,6 @@
   const likesCount = bigPicture.querySelector(`.likes-count`);
   const description = bigPicture.querySelector(`.social__caption`);
   const commentsCount = bigPicture.querySelector(`.comments-count`);
-/*  const socialCommentCount = document.querySelector(`.social__comment-count`);*/
   let photoComments;
 
   const renderComment = (comment) => {
