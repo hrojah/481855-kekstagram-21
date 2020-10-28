@@ -1,6 +1,7 @@
 'use strict';
 
 (() => {
+  const NEW_COMMENTS = 5;
   const bigPicture = document.querySelector(`.big-picture`);
   const commentsLoader = bigPicture.querySelector(`.comments-loader`);
   const socialComments = bigPicture.querySelector(`.social__comments`);
@@ -10,8 +11,7 @@
   const likesCount = bigPicture.querySelector(`.likes-count`);
   const description = bigPicture.querySelector(`.social__caption`);
   const commentsCount = bigPicture.querySelector(`.comments-count`);
-  let firstComments;
-  let comments;
+  let photoComments;
 
   const renderComment = (comment) => {
     const element = document.createElement(`li`);
@@ -27,25 +27,12 @@
     return element;
   };
 
-  const getComments = (comment, commentsContainer) => {
-    firstComments = comment.splice(0, 5);
-    for (let i = 0; i < firstComments.length; i++) {
-      commentsContainer.appendChild(renderComment(firstComments[i]));
-    }
-    if (firstComments.length === 0) {
-      commentsLoader.classList.add(`hidden`);
-    }
-  };
-
-  const commentsLoaderClickListener = () => {
-    getComments(firstComments, comments);
-  };
-
   const closeModalOpen = () => {
     bigPicture.classList.add(`hidden`);
     socialCommentText.value = ``;
+    socialComments.innerHTML = ``;
     document.removeEventListener(`keydown`, window.utils.onPressEsc);
-    commentsLoader.removeEventListener(`click`, commentsLoaderClickListener);
+    commentsLoader.removeEventListener(`click`, getComments);
     commentsLoader.removeEventListener(`keydown`, window.utils.onPressEnter);
   };
 
@@ -57,10 +44,25 @@
     document.addEventListener(`keydown`, (keydownEvent) => {
       window.utils.onPressEsc(keydownEvent, closeModalOpen);
     });
-    commentsLoader.addEventListener(`click`, commentsLoaderClickListener);
+    commentsLoader.addEventListener(`click`, getComments);
     commentsLoader.addEventListener(`keydown`, (keyEvt) => {
-      window.utils.onPressEnter(keyEvt, commentsLoaderClickListener);
+      window.utils.onPressEnter(keyEvt, getComments);
     });
+  };
+
+  const getComments = () => {
+    const commentsList = document.querySelectorAll(`.social__comment`);
+    const count = commentsList.length;
+    const index = count + NEW_COMMENTS;
+    const fiveComments = photoComments.slice(count, index);
+    const comments = document.createDocumentFragment();
+    for (let i = 0; i < fiveComments.length; i++) {
+      comments.appendChild(renderComment(fiveComments[i]));
+    }
+    socialComments.append(comments);
+    if (fiveComments.length < NEW_COMMENTS) {
+      commentsLoader.classList.add(`hidden`);
+    }
   };
 
   const renderBigPicture = (photo) => {
@@ -68,11 +70,8 @@
     likesCount.textContent = photo.likes;
     description.textContent = photo.description;
     commentsCount.textContent = photo.comments.length;
-    comments = document.createDocumentFragment();
-    const photoComments = photo.comments.slice();
-    getComments(photoComments, comments);
-    socialComments.innerHTML = ``;
-    socialComments.append(comments);
+    photoComments = photo.comments;
+    getComments(photo.comments);
   };
 
   const initPictureHandlers = () => {
