@@ -11,6 +11,7 @@
   const likesCount = bigPicture.querySelector(`.likes-count`);
   const description = bigPicture.querySelector(`.social__caption`);
   const commentsCount = bigPicture.querySelector(`.comments-count`);
+/*  const socialCommentCount = document.querySelector(`.social__comment-count`);*/
   let photoComments;
 
   const renderComment = (comment) => {
@@ -31,6 +32,7 @@
     bigPicture.classList.add(`hidden`);
     socialCommentText.value = ``;
     socialComments.innerHTML = ``;
+    commentsLoader.classList.remove(`hidden`);
     document.removeEventListener(`keydown`, window.utils.onPressEsc);
     commentsLoader.removeEventListener(`click`, getComments);
     commentsLoader.removeEventListener(`keydown`, window.utils.onPressEnter);
