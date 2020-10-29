@@ -5,6 +5,7 @@
     enter: `Enter`,
     esc: `Escape`,
   };
+  const DEBOUNCE_INTERVAL = 500;
 
   const onPressEsc = (evt, callback) => {
     if (evt.key === KEYDOWN.esc) {
@@ -19,9 +20,24 @@
     }
   };
 
-  window.util = {
+  const debounce = (cb) => {
+
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb.apply(...parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
+  window.utils = {
     onPressEnter,
     onPressEsc,
+    debounce,
     KEYDOWN,
   };
 })();

@@ -16,10 +16,6 @@
   const successModal = document.querySelector(`#success`).content.querySelector(`section`);
   const form = document.querySelector(`.img-upload__form`);
   const hashtagsText = form.querySelector(`.text__hashtags`);
-  let successWindow;
-  let successButton;
-  let errorWindow;
-  let errorButton;
 
   const hashtagsNumber = (hashtaglist) => {
     return hashtaglist.length > MAX_HASHTAGS;
@@ -71,52 +67,47 @@
     return VALIDATION_MESSAGES.success;
   };
 
-  const closeErrorModal = () => {
-    errorWindow.remove();
-    errorButton.removeEventListener(`click`, closeErrorModal);
-    document.removeEventListener(`keydown`, closeErrorModal);
-    document.removeEventListener(`click`, closeErrorModal);
-  };
-
-  const closeSuccessModal = () => {
-    successWindow.remove();
-    successButton.removeEventListener(`click`, closeSuccessModal);
-    document.removeEventListener(`keydown`, closeSuccessModal);
-    document.removeEventListener(`click`, closeSuccessModal);
-  };
-
   const onSuccess = () => {
-    successWindow = successModal.cloneNode(true);
+    const successWindow = successModal.cloneNode(true);
     window.overlay.closeOverlay();
-    main.append(successWindow);
-    successButton = document.querySelector(`.success__button`);
-    successButton.addEventListener(`click`, closeSuccessModal);
-    const success = document.querySelector(`.success`);
-    document.addEventListener(`keydown`, (keydownEvent) => {
-      window.util.onPressEsc(keydownEvent, closeSuccessModal);
+    const successButton = successWindow.querySelector(`.success__button`);
+    successButton.addEventListener(`click`, () => {
+      successWindow.remove();
     });
-    success.addEventListener(`click`, (evt) => {
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.utils.onPressEsc(keydownEvent, () => {
+        successWindow.remove();
+      });
+    });
+    successWindow.addEventListener(`click`, (evt) => {
       if (!evt.target.closest(`.success__inner`)) {
-        closeSuccessModal();
+        successWindow.remove();
       }
     });
+
+    successButton.addEventListener(`blur`, () => successButton.focus());
+    main.append(successWindow);
   };
 
   const onError = () => {
-    errorWindow = errorModal.cloneNode(true);
+    const errorWindow = errorModal.cloneNode(true);
     window.overlay.closeOverlay();
-    main.append(errorWindow);
-    errorButton = document.querySelector(`.error__button`);
-    errorButton.addEventListener(`click`, closeErrorModal);
-    const error = document.querySelector(`.error`);
-    document.addEventListener(`keydown`, (keydownEvent) => {
-      window.util.onPressEsc(keydownEvent, closeErrorModal);
+    const errorButton = errorWindow.querySelector(`.error__button`);
+    errorButton.addEventListener(`click`, () => {
+      errorWindow.remove();
     });
-    error.addEventListener(`click`, (evt) => {
+    document.addEventListener(`keydown`, (keydownEvent) => {
+      window.utils.onPressEsc(keydownEvent, () => {
+        errorWindow.remove();
+      });
+    });
+    errorWindow.addEventListener(`click`, (evt) => {
       if (!evt.target.closest(`.error__inner`)) {
-        closeSuccessModal();
+        errorWindow();
       }
     });
+    errorButton.addEventListener(`blur`, () => errorButton.focus());
+    main.append(errorWindow);
   };
 
   const formSubmit = (evt) => {

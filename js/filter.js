@@ -4,13 +4,22 @@
   const defaultFilterButton = document.querySelector(`#filter-default`);
   const commentsFilterButton = document.querySelector(`#filter-discussed`);
   const randomFilterButton = document.querySelector(`#filter-random`);
+  const filters = document.querySelector(`.img-filters`);
+
+  const selectFilter = (buttonElement) => {
+    filters.querySelectorAll(`.img-filters__button--active`).forEach((element) => {
+      element.classList.remove(`img-filters__button--active`);
+    });
+    buttonElement.classList.add(`img-filters__button--active`);
+  };
 
   const clearPhotos = () => {
-    const photo = document.querySelectorAll(`.picture`);
-    for (let i = 0; i < photo.length; i++) {
-      const elem = photo[i];
-      window.gallery.pictures.removeChild(elem);
+    window.gallery.pictures.classList.add(`hidden`);
+    const photos = document.querySelectorAll(`.picture`);
+    for (let i = 0; i < photos.length; i++) {
+      photos[i].remove();
     }
+    window.gallery.pictures.classList.remove(`hidden`);
   };
 
   const shufflePhotos = (photos) => {
@@ -23,42 +32,35 @@
     return photos;
   };
 
-  const defaultFilter = window.debounce(() => {
-    defaultFilterButton.classList.add(`img-filters__button--active`);
-    commentsFilterButton.classList.remove(`img-filters__button--active`);
-    randomFilterButton.classList.remove(`img-filters__button--active`);
+  const getDefaultPhotos = () => {
+    selectFilter(defaultFilterButton);
     clearPhotos();
-    const photos = window.gallery.getPhotos();
-    window.gallery.createPictures(photos);
-  });
-
-  const getComments = (element) => {
-    return element.comments.length;
+    window.gallery.createPictures(window.gallery.getPhotos());
   };
 
-  const countCommentsFilter = window.debounce(() => {
-    commentsFilterButton.classList.add(`img-filters__button--active`);
-    randomFilterButton.classList.remove(`img-filters__button--active`);
-    defaultFilterButton.classList.remove(`img-filters__button--active`);
+  const getCountCommentsPhotos = () => {
+    selectFilter(commentsFilterButton);
     const photos = window.gallery.getPhotos();
     const commentFilterPhoto = photos.slice();
     clearPhotos();
     window.gallery.createPictures(commentFilterPhoto.sort((left, right) => {
-      return getComments(right) - getComments(left);
+      return right.comments.length - left.comments.length;
     }));
-  });
+  };
 
-  const randomFilter = window.debounce(() => {
-    randomFilterButton.classList.add(`img-filters__button--active`);
-    commentsFilterButton.classList.remove(`img-filters__button--active`);
-    defaultFilterButton.classList.remove(`img-filters__button--active`);
+  const getRandomPhotos = () => {
+    selectFilter(randomFilterButton);
     const photos = window.gallery.getPhotos();
     let randomFilterPhoto = photos.slice();
     shufflePhotos(randomFilterPhoto);
     randomFilterPhoto = randomFilterPhoto.slice(0, 10);
     clearPhotos();
     window.gallery.createPictures(randomFilterPhoto);
-  });
+  };
+
+  const defaultFilter = window.utils.debounce(getDefaultPhotos);
+  const countCommentsFilter = window.utils.debounce(getCountCommentsPhotos);
+  const randomFilter = window.utils.debounce(getRandomPhotos);
 
   defaultFilterButton.addEventListener(`click`, defaultFilter);
   commentsFilterButton.addEventListener(`click`, countCommentsFilter);
