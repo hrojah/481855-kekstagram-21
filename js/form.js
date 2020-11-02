@@ -10,6 +10,7 @@ const VALIDATION_MESSAGES = {
   numberTags: `длина хэштега не более 20 символов`,
   success: ``,
 };
+
 const main = document.querySelector(`main`);
 const errorModal = document.querySelector(`#error`).content.querySelector(`section`);
 const successModal = document.querySelector(`#success`).content.querySelector(`section`);
