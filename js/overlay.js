@@ -1,10 +1,12 @@
 'use strict';
 
+const FILE_TYPE = [`gif`, `jpg`, `jpeg`, `png`];
 const body = document.body;
 const upload = document.querySelector(`#upload-file`);
 const uploadOverlay = document.querySelector(`.img-upload__overlay`);
 const uploadCancel = uploadOverlay.querySelector(`#upload-cancel`);
 const commentsText = document.querySelector(`.text__description`);
+const preview = document.querySelector(`.img-upload__image`);
 
 const onOverlayEscPress = (evt) => {
   if (evt.key === window.utils.KEYDOWN.esc) {
@@ -39,7 +41,26 @@ const closeOverlay = () => {
   window.form.hashtagsText.value = ``;
 };
 
+const uploadImage = () => {
+  const file = upload.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPE.some((ending) => {
+    return fileName.endsWith(ending);
+  });
+
+  if (matches) {
+    const reader = new FileReader();
+
+    reader.addEventListener(`load`, () => {
+      preview.src = reader.result;
+    });
+    reader.readAsDataURL(file);
+  }
+};
+
 upload.addEventListener(`change`, () => {
+  uploadImage();
   openOverlay();
 });
 
