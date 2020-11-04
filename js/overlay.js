@@ -39,7 +39,6 @@ const closeOverlay = () => {
   window.effects.imgPreview.style.filter = ``;
   window.effects.imgPreview.className = ``;
   window.form.hashtagsText.innerHTML = ``;
-
 };
 
 const uploadImage = () => {

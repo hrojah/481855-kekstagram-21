@@ -27,6 +27,7 @@ const renderComment = (comment) => {
   return element;
 };
 
+
 const modalCloseHandler = () => {
   window.overlay.body.classList.remove(`modal-open`);
   bigPicture.classList.add(`hidden`);

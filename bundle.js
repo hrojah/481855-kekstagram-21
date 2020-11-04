@@ -124,6 +124,7 @@ const getPhotos = () => {
   return photoDescription;
 };
 
+
 const renderPicture = (photo) => {
   const pictureElement = cardsPicture.cloneNode(true);
   pictureElement.id = photo.id;
@@ -202,6 +203,7 @@ const renderComment = (comment) => {
   commentText.textContent = comment.message;
   return element;
 };
+
 
 const modalCloseHandler = () => {
   window.overlay.body.classList.remove(`modal-open`);
@@ -323,7 +325,6 @@ const closeOverlay = () => {
   window.effects.imgPreview.style.filter = ``;
   window.effects.imgPreview.className = ``;
   window.form.hashtagsText.innerHTML = ``;
-
 };
 
 const uploadImage = () => {
@@ -698,7 +699,6 @@ const selectFilter = (buttonElement) => {
     element.classList.remove(`img-filters__button--active`);
   });
   buttonElement.classList.add(`img-filters__button--active`);
-
 };
 
 const clearPhotos = () => {
@@ -725,6 +725,7 @@ const getDefaultPhotos = () => {
   clearPhotos();
   window.gallery.createPictures(window.gallery.getPhotos());
   window.preview.initPictureHandlers();
+
 };
 
 const getCountCommentsPhotos = () => {
@@ -747,6 +748,7 @@ const getRandomPhotos = () => {
   clearPhotos();
   window.gallery.createPictures(randomFilterPhoto);
   window.preview.initPictureHandlers();
+
 };
 
 const defaultFilter = window.utils.debounce(getDefaultPhotos);
