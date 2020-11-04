@@ -2,6 +2,7 @@
 
 const MIN_COORD = 0;
 const MAX_COORD = 453;
+const SCALE_STEP = 25;
 const EFFECTS = {
   chrome: `effects__preview--chrome`,
   sepia: `effects__preview--sepia`,
@@ -54,7 +55,7 @@ const scaleBigger = document.querySelector(`.scale__control--bigger`);
 const declineScale = () => {
   const value = parseInt(scaleValue.value, 10);
   if (value > 25) {
-    const valueNew = value - 25;
+    const valueNew = value - SCALE_STEP;
     scaleValue.value = valueNew + `%`;
     const valueTransform = valueNew / 100;
     imgPreview.style.transform = `scale(${valueTransform})`;
@@ -64,7 +65,7 @@ const declineScale = () => {
 const increaseScale = () => {
   const value = parseInt(scaleValue.value, 10);
   if (value < 100) {
-    const valueNew = value + 25;
+    const valueNew = value + SCALE_STEP;
     scaleValue.value = valueNew + `%`;
     const valueTransform = valueNew / 100;
     imgPreview.style.transform = `scale(${valueTransform})`;

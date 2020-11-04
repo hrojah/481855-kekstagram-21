@@ -27,31 +27,33 @@ const renderComment = (comment) => {
   return element;
 };
 
-const closeModalOpen = () => {
+const modalCloseHandler = () => {
+  window.overlay.body.classList.remove(`modal-open`);
   bigPicture.classList.add(`hidden`);
   socialCommentText.value = ``;
   socialComments.innerHTML = ``;
   commentsLoader.classList.remove(`hidden`);
   document.removeEventListener(`keydown`, window.utils.onPressEsc);
-  commentsLoader.removeEventListener(`click`, getComments);
+  commentsLoader.removeEventListener(`click`, getCommentsHandler);
   commentsLoader.removeEventListener(`keydown`, window.utils.onPressEnter);
 };
 
 const modalOpenHandler = (evt) => {
+  window.overlay.body.classList.add(`modal-open`);
   const photos = window.gallery.getPhotos();
   const index = parseInt(evt.target.closest(`.picture`).id, 10);
   renderBigPicture(photos[index]);
   bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, (keydownEvent) => {
-    window.utils.onPressEsc(keydownEvent, closeModalOpen);
+    window.utils.onPressEsc(keydownEvent, modalCloseHandler);
   });
-  commentsLoader.addEventListener(`click`, getComments);
+  commentsLoader.addEventListener(`click`, getCommentsHandler);
   commentsLoader.addEventListener(`keydown`, (keyEvt) => {
-    window.utils.onPressEnter(keyEvt, getComments);
+    window.utils.onPressEnter(keyEvt, getCommentsHandler);
   });
 };
 
-const getComments = () => {
+const getCommentsHandler = () => {
   const commentsList = document.querySelectorAll(`.social__comment`);
   const count = commentsList.length;
   const index = count + NEW_COMMENTS;
@@ -74,7 +76,7 @@ const renderBigPicture = (photo) => {
   description.textContent = photo.description;
   commentsCount.textContent = photo.comments.length;
   photoComments = photo.comments;
-  getComments(photo.comments);
+  getCommentsHandler(photo.comments);
 };
 
 const initPictureHandlers = () => {
@@ -86,10 +88,10 @@ const initPictureHandlers = () => {
   });
 };
 
-closeBigPicture.addEventListener(`click`, closeModalOpen);
+closeBigPicture.addEventListener(`click`, modalCloseHandler);
 
 closeBigPicture.addEventListener(`keydown`, (evt) => {
-  window.utils.onPressEnter(evt, closeModalOpen);
+  window.utils.onPressEnter(evt, modalCloseHandler);
 });
 
 window.preview = {

@@ -10,6 +10,7 @@ const selectFilter = (buttonElement) => {
     element.classList.remove(`img-filters__button--active`);
   });
   buttonElement.classList.add(`img-filters__button--active`);
+
 };
 
 const clearPhotos = () => {
@@ -35,6 +36,7 @@ const getDefaultPhotos = () => {
   selectFilter(defaultFilterButton);
   clearPhotos();
   window.gallery.createPictures(window.gallery.getPhotos());
+  window.preview.initPictureHandlers();
 };
 
 const getCountCommentsPhotos = () => {
@@ -45,6 +47,7 @@ const getCountCommentsPhotos = () => {
   window.gallery.createPictures(commentFilterPhoto.sort((left, right) => {
     return right.comments.length - left.comments.length;
   }));
+  window.preview.initPictureHandlers();
 };
 
 const getRandomPhotos = () => {
@@ -55,6 +58,7 @@ const getRandomPhotos = () => {
   randomFilterPhoto = randomFilterPhoto.slice(0, 10);
   clearPhotos();
   window.gallery.createPictures(randomFilterPhoto);
+  window.preview.initPictureHandlers();
 };
 
 const defaultFilter = window.utils.debounce(getDefaultPhotos);

@@ -38,7 +38,8 @@ const closeOverlay = () => {
   window.effects.imgPreview.style.transform = `scale(1)`;
   window.effects.imgPreview.style.filter = ``;
   window.effects.imgPreview.className = ``;
-  window.form.hashtagsText.value = ``;
+  window.form.hashtagsText.innerHTML = ``;
+
 };
 
 const uploadImage = () => {
@@ -74,4 +75,5 @@ uploadCancel.addEventListener(`keydown`, (evt) => {
 
 window.overlay = {
   closeOverlay,
+  body,
 };

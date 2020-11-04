@@ -69,7 +69,6 @@ const hashtagValidity = () => {
 
 const onSuccess = () => {
   const successWindow = successModal.cloneNode(true);
-  window.overlay.closeOverlay();
   const successButton = successWindow.querySelector(`.success__button`);
   successButton.addEventListener(`click`, () => {
     successWindow.remove();
@@ -91,7 +90,6 @@ const onSuccess = () => {
 
 const onError = () => {
   const errorWindow = errorModal.cloneNode(true);
-  window.overlay.closeOverlay();
   const errorButton = errorWindow.querySelector(`.error__button`);
   errorButton.addEventListener(`click`, () => {
     errorWindow.remove();
@@ -117,6 +115,8 @@ const formSubmit = (evt) => {
   if (validationMessage === VALIDATION_MESSAGES.success) {
     window.api.upload(new FormData(form), onSuccess, onError);
   }
+  window.overlay.closeOverlay();
+  form.reset();
 };
 
 hashtagsText.addEventListener(`input`, () => {

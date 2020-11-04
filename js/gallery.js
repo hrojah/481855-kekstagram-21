@@ -10,9 +10,9 @@ const getPhotos = () => {
   return photoDescription;
 };
 
-const renderPicture = (index, photo) => {
+const renderPicture = (photo) => {
   const pictureElement = cardsPicture.cloneNode(true);
-  pictureElement.id = index;
+  pictureElement.id = photo.id;
   pictureElement.querySelector(`.picture__img`).src = photo.url;
   pictureElement.querySelector(`.picture__likes`).textContent = photo.likes;
   pictureElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
@@ -23,13 +23,16 @@ const renderPicture = (index, photo) => {
 const createPictures = (photos) => {
   const pictureFragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
-    pictureFragment.append(renderPicture(i, photos[i]));
+    pictureFragment.append(renderPicture(photos[i]));
   }
   pictures.append(pictureFragment);
 };
 
 window.api.load((response) => {
-  photoDescription = response;
+  photoDescription = response.map((item, index) => {
+    item.id = index;
+    return item;
+  });
   createPictures(photoDescription);
   filter.classList.remove(`img-filters--inactive`);
   window.preview.initPictureHandlers();

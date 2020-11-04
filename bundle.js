@@ -124,9 +124,9 @@ const getPhotos = () => {
   return photoDescription;
 };
 
-const renderPicture = (index, photo) => {
+const renderPicture = (photo) => {
   const pictureElement = cardsPicture.cloneNode(true);
-  pictureElement.id = index;
+  pictureElement.id = photo.id;
   pictureElement.querySelector(`.picture__img`).src = photo.url;
   pictureElement.querySelector(`.picture__likes`).textContent = photo.likes;
   pictureElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
@@ -137,13 +137,16 @@ const renderPicture = (index, photo) => {
 const createPictures = (photos) => {
   const pictureFragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
-    pictureFragment.append(renderPicture(i, photos[i]));
+    pictureFragment.append(renderPicture(photos[i]));
   }
   pictures.append(pictureFragment);
 };
 
 window.api.load((response) => {
-  photoDescription = response;
+  photoDescription = response.map((item, index) => {
+    item.id = index;
+    return item;
+  });
   createPictures(photoDescription);
   filter.classList.remove(`img-filters--inactive`);
   window.preview.initPictureHandlers();
@@ -200,31 +203,33 @@ const renderComment = (comment) => {
   return element;
 };
 
-const closeModalOpen = () => {
+const modalCloseHandler = () => {
+  window.overlay.body.classList.remove(`modal-open`);
   bigPicture.classList.add(`hidden`);
   socialCommentText.value = ``;
   socialComments.innerHTML = ``;
   commentsLoader.classList.remove(`hidden`);
   document.removeEventListener(`keydown`, window.utils.onPressEsc);
-  commentsLoader.removeEventListener(`click`, getComments);
+  commentsLoader.removeEventListener(`click`, getCommentsHandler);
   commentsLoader.removeEventListener(`keydown`, window.utils.onPressEnter);
 };
 
 const modalOpenHandler = (evt) => {
+  window.overlay.body.classList.add(`modal-open`);
   const photos = window.gallery.getPhotos();
   const index = parseInt(evt.target.closest(`.picture`).id, 10);
   renderBigPicture(photos[index]);
   bigPicture.classList.remove(`hidden`);
   document.addEventListener(`keydown`, (keydownEvent) => {
-    window.utils.onPressEsc(keydownEvent, closeModalOpen);
+    window.utils.onPressEsc(keydownEvent, modalCloseHandler);
   });
-  commentsLoader.addEventListener(`click`, getComments);
+  commentsLoader.addEventListener(`click`, getCommentsHandler);
   commentsLoader.addEventListener(`keydown`, (keyEvt) => {
-    window.utils.onPressEnter(keyEvt, getComments);
+    window.utils.onPressEnter(keyEvt, getCommentsHandler);
   });
 };
 
-const getComments = () => {
+const getCommentsHandler = () => {
   const commentsList = document.querySelectorAll(`.social__comment`);
   const count = commentsList.length;
   const index = count + NEW_COMMENTS;
@@ -247,7 +252,7 @@ const renderBigPicture = (photo) => {
   description.textContent = photo.description;
   commentsCount.textContent = photo.comments.length;
   photoComments = photo.comments;
-  getComments(photo.comments);
+  getCommentsHandler(photo.comments);
 };
 
 const initPictureHandlers = () => {
@@ -259,10 +264,10 @@ const initPictureHandlers = () => {
   });
 };
 
-closeBigPicture.addEventListener(`click`, closeModalOpen);
+closeBigPicture.addEventListener(`click`, modalCloseHandler);
 
 closeBigPicture.addEventListener(`keydown`, (evt) => {
-  window.utils.onPressEnter(evt, closeModalOpen);
+  window.utils.onPressEnter(evt, modalCloseHandler);
 });
 
 window.preview = {
@@ -317,7 +322,8 @@ const closeOverlay = () => {
   window.effects.imgPreview.style.transform = `scale(1)`;
   window.effects.imgPreview.style.filter = ``;
   window.effects.imgPreview.className = ``;
-  window.form.hashtagsText.value = ``;
+  window.form.hashtagsText.innerHTML = ``;
+
 };
 
 const uploadImage = () => {
@@ -353,6 +359,7 @@ uploadCancel.addEventListener(`keydown`, (evt) => {
 
 window.overlay = {
   closeOverlay,
+  body,
 };
 
 })();
@@ -367,6 +374,7 @@ window.overlay = {
 
 const MIN_COORD = 0;
 const MAX_COORD = 453;
+const SCALE_STEP = 25;
 const EFFECTS = {
   chrome: `effects__preview--chrome`,
   sepia: `effects__preview--sepia`,
@@ -419,7 +427,7 @@ const scaleBigger = document.querySelector(`.scale__control--bigger`);
 const declineScale = () => {
   const value = parseInt(scaleValue.value, 10);
   if (value > 25) {
-    const valueNew = value - 25;
+    const valueNew = value - SCALE_STEP;
     scaleValue.value = valueNew + `%`;
     const valueTransform = valueNew / 100;
     imgPreview.style.transform = `scale(${valueTransform})`;
@@ -429,7 +437,7 @@ const declineScale = () => {
 const increaseScale = () => {
   const value = parseInt(scaleValue.value, 10);
   if (value < 100) {
-    const valueNew = value + 25;
+    const valueNew = value + SCALE_STEP;
     scaleValue.value = valueNew + `%`;
     const valueTransform = valueNew / 100;
     imgPreview.style.transform = `scale(${valueTransform})`;
@@ -607,7 +615,6 @@ const hashtagValidity = () => {
 
 const onSuccess = () => {
   const successWindow = successModal.cloneNode(true);
-  window.overlay.closeOverlay();
   const successButton = successWindow.querySelector(`.success__button`);
   successButton.addEventListener(`click`, () => {
     successWindow.remove();
@@ -629,7 +636,6 @@ const onSuccess = () => {
 
 const onError = () => {
   const errorWindow = errorModal.cloneNode(true);
-  window.overlay.closeOverlay();
   const errorButton = errorWindow.querySelector(`.error__button`);
   errorButton.addEventListener(`click`, () => {
     errorWindow.remove();
@@ -655,6 +661,8 @@ const formSubmit = (evt) => {
   if (validationMessage === VALIDATION_MESSAGES.success) {
     window.api.upload(new FormData(form), onSuccess, onError);
   }
+  window.overlay.closeOverlay();
+  form.reset();
 };
 
 hashtagsText.addEventListener(`input`, () => {
@@ -690,6 +698,7 @@ const selectFilter = (buttonElement) => {
     element.classList.remove(`img-filters__button--active`);
   });
   buttonElement.classList.add(`img-filters__button--active`);
+
 };
 
 const clearPhotos = () => {
@@ -715,6 +724,7 @@ const getDefaultPhotos = () => {
   selectFilter(defaultFilterButton);
   clearPhotos();
   window.gallery.createPictures(window.gallery.getPhotos());
+  window.preview.initPictureHandlers();
 };
 
 const getCountCommentsPhotos = () => {
@@ -725,6 +735,7 @@ const getCountCommentsPhotos = () => {
   window.gallery.createPictures(commentFilterPhoto.sort((left, right) => {
     return right.comments.length - left.comments.length;
   }));
+  window.preview.initPictureHandlers();
 };
 
 const getRandomPhotos = () => {
@@ -735,6 +746,7 @@ const getRandomPhotos = () => {
   randomFilterPhoto = randomFilterPhoto.slice(0, 10);
   clearPhotos();
   window.gallery.createPictures(randomFilterPhoto);
+  window.preview.initPictureHandlers();
 };
 
 const defaultFilter = window.utils.debounce(getDefaultPhotos);
