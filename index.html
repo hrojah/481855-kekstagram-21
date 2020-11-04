@@ -9,7 +9,7 @@
   <title>Кекстаграм</title>
 </head>
 
-<body class="modal-open">
+<body>
   <main>
 
     <!-- Фильтрация изображений от других пользователей -->
@@ -30,7 +30,7 @@
       <section class="img-upload">
         <div class="img-upload__wrapper">
           <h2 class="img-upload__title  visually-hidden">Загрузка фотографии</h2>
-          <form class="img-upload__form" id="upload-select-image" method="post" enctype="multipart/form-data" autocomplete="off">
+          <form class="img-upload__form" id="upload-select-image" action="" method="post" enctype="multipart/form-data" autocomplete="off">
 
             <!-- Изначальное состояние поля для загрузки изображения -->
             <fieldset class="img-upload__start">
@@ -52,7 +52,7 @@
 
                   <!-- Предварительный просмотр изображения -->
                   <div class="img-upload__preview">
-                    <img src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
+                    <img class="img-upload__image" src="img/upload-default-image.jpg" alt="Предварительный просмотр фотографии">
                   </div>
 
                   <!-- Изменение глубины эффекта, накладываемого на изображение -->
@@ -224,13 +224,6 @@
   <template id="messages">
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
-  <script src="js/utils.js"></script>
-  <script src=js/api.js></script>
-  <script src="js/gallery.js"></script>
-  <script src="js/preview.js"></script>
-  <script src="js/overlay.js"></script>
-  <script src="js/effects.js"></script>
-  <script src="js/form.js"></script>
-  <script src="js/filter.js"></script>
+  <script src="bundle.js"></script>
 </body>
 </html>
