@@ -3,7 +3,6 @@
 const MIN_COORD = 0;
 const MAX_COORD = 453;
 const SCALE_STEP = 25;
-
 const EFFECTS = {
   chrome: `effects__preview--chrome`,
   sepia: `effects__preview--sepia`,

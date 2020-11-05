@@ -40,7 +40,6 @@ const closeOverlay = () => {
   window.effects.imgPreview.className = ``;
   window.form.hashtagsText.innerHTML = ``;
   window.form.form.reset();
-
 };
 
 const uploadImage = () => {
