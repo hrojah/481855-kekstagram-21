@@ -39,6 +39,7 @@ const closeOverlay = () => {
   window.effects.imgPreview.style.filter = ``;
   window.effects.imgPreview.className = ``;
   window.form.hashtagsText.innerHTML = ``;
+  window.form.form.reset();
 
 };
 
